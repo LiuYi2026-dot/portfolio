@@ -9,6 +9,14 @@
     <title>刘毅 · AI辅助开发者 · 可接单</title>
     <meta name="description" content="刘毅 - AI辅助开发者，提供企业官网、数据看板、自动化脚本等Web开发服务。大专毕业自学成才，用AI工具高效交付。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="刘毅 · AI辅助开发者 · 可接单">
+    <meta property="og:description" content="刘毅 - AI辅助开发者，提供企业官网、数据看板、自动化脚本等Web开发服务。用AI工具高效交付。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://liuyi2026-dot.github.io/portfolio/">
+    <meta property="og:image" content="https://liuyi2026-dot.github.io/portfolio/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
     <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -244,6 +252,15 @@
 
         footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
 
+        /* 滚动入场动画 */
+        .scroll-reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .scroll-reveal.visible {
+            opacity: 1; transform: translateY(0);
+        }
+
         .back-top {
             position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px;
             border-radius: 50%; background: var(--primary); color: #fff; border: none;
@@ -259,12 +276,16 @@
         }
         @media (max-width: 640px) {
             .mobile-menu-btn { display: flex; }
-            .nav-links { display: none; }
-            .nav-links.open {
-                display: flex; flex-direction: column; position: absolute; top: var(--nav-height);
-                left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border);
+            .nav-links {
+                position: absolute; top: var(--nav-height); left: 0; right: 0;
+                background: var(--bg); border-bottom: 1px solid var(--border);
                 padding: 16px 24px; gap: 16px; z-index: 999;
                 backdrop-filter: blur(12px);
+                transform: translateY(-10px); opacity: 0; pointer-events: none;
+                transition: all 0.3s ease; display: flex; flex-direction: column;
+            }
+            .nav-links.open {
+                transform: translateY(0); opacity: 1; pointer-events: auto;
             }
             .nav-links a.active::after { display: none; }
             .nav-links .nav-badge { vertical-align: middle; }
@@ -387,7 +408,7 @@
     </section>
 
     <!-- ====== 服务 ====== -->
-    <section class="services" id="services">
+    <section class="services scroll-reveal" id="services">
         <h2 class="section-title"><i class="fas fa-briefcase"></i> 可接服务</h2>
         <p class="section-sub">用 AI 提效，更快交付，价格透明</p>
         <div class="services-grid">
@@ -413,7 +434,7 @@
     </section>
 
     <!-- ====== 接单流程 ====== -->
-    <section class="process" id="process">
+    <section class="process scroll-reveal" id="process">
         <h2 class="section-title"><i class="fas fa-list-ol"></i> 合作流程</h2>
         <p class="section-sub">简单四步，快速交付</p>
         <div class="process-steps">
@@ -449,7 +470,7 @@
     </section>
 
     <!-- ====== 联系 ====== -->
-    <section class="contact" id="contact">
+    <section class="contact scroll-reveal" id="contact">
         <div class="contact-card">
             <h2><i class="fas fa-handshake"></i> 联系我</h2>
             <p>有项目需求？加微信直接聊，24小时内回复。先沟通需求，免费评估。</p>
@@ -553,6 +574,17 @@
                 closeMenu();
             }
         });
+
+        // ===== 滚动入场动画 =====
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.scroll-reveal').forEach(function(el) { revealObserver.observe(el); });
     </script>
 </body>
 </html>

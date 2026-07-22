@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>刘毅 · AI辅助开发者 · 作品集</title>
-    <meta name="description" content="刘毅的个人作品集 - AI辅助开发的Web应用，包括待办事项App、技术博客和数据可视化看板。">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>刘毅 · AI辅助开发者 · 可接单</title>
+    <meta name="description" content="刘毅 - AI辅助开发者，提供企业官网、数据看板、自动化脚本等Web开发服务。大专毕业自学成才，用AI工具高效交付。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
-    <!-- 国内加速字体 -->
     <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -47,13 +49,11 @@
             color: var(--text);
             line-height: 1.6;
             transition: background var(--transition), color var(--transition);
+            animation: pageIn 0.4s ease;
         }
+        @keyframes pageIn { 0% { opacity: 0; } 100% { opacity: 1; } }
         a { color: var(--primary); text-decoration: none; }
         a:hover { color: var(--primary-light); }
-        /* 页面加载淡入 */
-        body { animation: pageIn 0.5s ease; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
         nav {
             position: fixed; top: 0; left: 0; right: 0;
             height: var(--nav-height); z-index: 1000;
@@ -72,14 +72,15 @@
         .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
         .nav-links a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; transition: color var(--transition); }
         .nav-links a:hover { color: var(--primary); }
-
-        /* 滚动时高亮当前导航项 */
         .nav-links a.active { color: var(--primary); position: relative; }
         .nav-links a.active::after {
             content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
             width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
         }
-
+        .nav-links .nav-badge {
+            background: #EF4444; color: #fff; font-size: 0.65rem; padding: 1px 6px;
+            border-radius: 10px; margin-left: 2px; vertical-align: super;
+        }
         .theme-toggle {
             background: none; border: 1px solid var(--border); border-radius: 8px;
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
@@ -95,7 +96,6 @@
         }
         .mobile-menu-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* Hero */
         .hero {
             padding: 120px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto;
         }
@@ -111,7 +111,8 @@
         .hero h1 {
             font-size: 2.2rem; font-weight: 700; margin-bottom: 8px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
         }
         .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 500px; margin: 0 auto 24px; }
         .hero-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
@@ -129,7 +130,6 @@
         .section-title i { color: var(--primary); }
         .section-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
 
-        /* 项目卡片滚动动画 */
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
         .project-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -138,9 +138,9 @@
             animation: cardIn 0.6s ease forwards;
         }
         .project-card:nth-child(1) { animation-delay: 0.08s; }
-.project-card:nth-child(2) { animation-delay: 0.16s; }
-.project-card:nth-child(3) { animation-delay: 0.24s; }
-.project-card:nth-child(4) { animation-delay: 0.32s; }
+        .project-card:nth-child(2) { animation-delay: 0.16s; }
+        .project-card:nth-child(3) { animation-delay: 0.24s; }
+        .project-card:nth-child(4) { animation-delay: 0.32s; }
         @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
         .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--primary-light); }
         .project-icon {
@@ -151,8 +151,7 @@
         .project-icon.purple { background: var(--primary-bg); color: var(--primary); }
         .project-icon.green { background: rgba(16,185,129,0.1); color: #10B981; }
         .project-icon.blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
-.project-icon.orange { background: rgba(245,158,11,0.1); color: #F59E0B; }
-.project-icon.red { background: rgba(239,68,68,0.1); color: #EF4444; }
+        .project-icon.orange { background: rgba(245,158,11,0.1); color: #F59E0B; }
         .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
         .project-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
         .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -166,8 +165,53 @@
         }
         .project-link i { transition: transform var(--transition); }
         .project-card:hover .project-link i { transform: translateX(4px); }
+        .project-note {
+            display: block; margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);
+            background: var(--primary-bg); padding: 4px 10px; border-radius: 6px;
+        }
 
-        /* 联系 */
+        /* ====== 服务板块 ====== */
+        .services { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .service-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 28px; text-align: center;
+            transition: all var(--transition);
+        }
+        .service-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--primary-light); }
+        .service-icon {
+            width: 56px; height: 56px; border-radius: 14px;
+            background: var(--primary-bg); color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin: 0 auto 16px;
+        }
+        .service-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+        .service-card .service-price {
+            display: inline-block; background: var(--primary); color: #fff;
+            padding: 2px 14px; border-radius: 12px; font-size: 0.82rem; font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .service-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+        /* ====== 接单流程 ====== */
+        .process { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+        .process-steps { display: flex; flex-direction: column; gap: 16px; }
+        .process-step {
+            display: flex; align-items: flex-start; gap: 16px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px 24px;
+            transition: all var(--transition);
+        }
+        .process-step:hover { box-shadow: var(--shadow); }
+        .process-step .step-num {
+            width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+            background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem;
+        }
+        .process-step .step-content h4 { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
+        .process-step .step-content p { color: var(--text-secondary); font-size: 0.85rem; }
+
         .contact { max-width: 800px; margin: 0 auto; padding: 0 24px 60px; }
         .contact-card {
             background: var(--card-bg); border: 1px solid var(--border);
@@ -182,7 +226,11 @@
             color: var(--text-secondary); font-size: 0.88rem; transition: all var(--transition);
         }
         .contact-links a:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
-        /* 微信点击复制提示 */
+        .contact-links .contact-cta {
+            background: var(--primary); color: #fff; border-color: var(--primary);
+        }
+        .contact-links .contact-cta:hover { background: var(--primary-light); color: #fff; }
+
         .copy-toast {
             position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
             background: var(--text); color: var(--bg); padding: 10px 20px;
@@ -193,7 +241,6 @@
 
         footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
 
-        /* 返回顶部 */
         .back-top {
             position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px;
             border-radius: 50%; background: var(--primary); color: #fff; border: none;
@@ -204,6 +251,9 @@
         .back-top.visible { opacity: 1; transform: translateY(0); }
         .back-top:hover { background: var(--primary-light); transform: translateY(-3px); }
 
+        @media (max-width: 768px) {
+            .services-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 640px) {
             .mobile-menu-btn { display: flex; }
             .nav-links { display: none; }
@@ -214,19 +264,25 @@
                 backdrop-filter: blur(12px);
             }
             .nav-links a.active::after { display: none; }
+            .nav-links .nav-badge { vertical-align: middle; }
             .hero h1 { font-size: 1.7rem; }
             .projects-grid { grid-template-columns: 1fr; }
             .back-top { right: 16px; bottom: 16px; width: 40px; height: 40px; }
+            .process-step { padding: 16px; }
         }
     </style>
 </head>
 <body>
+    <!-- ====== 缓存刷新版本标记 ====== -->
+    <div style="display:none;" id="version" data-build="20260723-01"></div>
+
     <nav>
         <div class="nav-inner">
             <a href="#" class="nav-logo"><i class="fas fa-code"></i> 刘毅</a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#projects" onclick="closeMenu()">项目</a></li>
-                <li><a href="blog/">博客</a></li>
+                <li><a href="#services" onclick="closeMenu()">服务 <span class="nav-badge">接单中</span></a></li>
+                <li><a href="blog/" onclick="closeMenu()">博客</a></li>
                 <li><a href="#contact" onclick="closeMenu()">联系</a></li>
             </ul>
             <div style="display:flex;gap:8px;align-items:center;">
@@ -243,15 +299,16 @@
         <div class="hero-tags">
             <span>HTML/CSS</span>
             <span>JavaScript</span>
+            <span>Python</span>
             <span>ECharts</span>
             <span>Trae AI</span>
-            <span>GitHub Pages</span>
         </div>
     </section>
 
+    <!-- ====== 项目 ====== -->
     <section class="projects" id="projects">
         <h2 class="section-title"><i class="fas fa-folder-open"></i> 我的项目</h2>
-        <p class="section-sub">用 AI 工具辅助开发的 4 个项目，全部已上线可访问。</p>
+        <p class="section-sub">用 AI 工具辅助开发的 4 个项目，全部可在线预览。</p>
         <div class="projects-grid">
             <div class="project-card">
                 <div class="project-icon purple"><i class="fas fa-check-double"></i></div>
@@ -286,11 +343,10 @@
                 </div>
                 <a href="dashboard/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <!-- 项目4: 自动化工具 -->
             <div class="project-card">
                 <div class="project-icon orange"><i class="fas fa-robot"></i></div>
                 <h3>AI 自动化工具</h3>
-                <p>Python + Streamlit 构建的在线工具。支持网页信息抓取（标题/链接/表格/正文）和 Excel 数据处理（清洗/统计/可视化/导出）。</p>
+                <p>Python + Streamlit 构建的在线工具。支持网页信息抓取和 Excel 数据处理（清洗/统计/可视化/导出）。</p>
                 <div class="project-tags">
                     <span>Python</span>
                     <span>Streamlit</span>
@@ -298,95 +354,174 @@
                     <span>Pandas</span>
                 </div>
                 <a href="https://automation-tool-7vmuabsenhago72rpysknc.streamlit.app/" target="_blank" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+                <span class="project-note">💤 首次打开可能需要 10-15 秒唤醒</span>
             </div>
         </div>
     </section>
 
+    <!-- ====== 服务 ====== -->
+    <section class="services" id="services">
+        <h2 class="section-title"><i class="fas fa-briefcase"></i> 可接服务</h2>
+        <p class="section-sub">用 AI 提效，更快交付，价格透明</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-globe"></i></div>
+                <h3>企业官网 / 落地页</h3>
+                <span class="service-price">¥800 起</span>
+                <p>响应式企业展示网站、产品落地页、个人名片站。支持多页面导航、表单提交，适配手机和电脑。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-chart-bar"></i></div>
+                <h3>数据看板 / 报表</h3>
+                <span class="service-price">¥1000 起</span>
+                <p>ECharts 可视化仪表盘，实时数据展示。折线图、柱状图、饼图、热力图等，适合运营和数据分析场景。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-file-excel"></i></div>
+                <h3>自动化脚本</h3>
+                <span class="service-price">¥500 起</span>
+                <p>Python 自动化处理：Excel 批量处理、网页信息抓取、文件整理、报表自动生成，替代重复性手工操作。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== 接单流程 ====== -->
+    <section class="process" id="process">
+        <h2 class="section-title"><i class="fas fa-list-ol"></i> 合作流程</h2>
+        <p class="section-sub">简单四步，快速交付</p>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>沟通需求</h4>
+                    <p>告诉我你想要什么——做什么类型的项目？需要哪些功能？有没有参考案例？越详细越好。</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>报价 &amp; 付定金</h4>
+                    <p>我会根据需求给出明确报价和交付时间。确认后支付 30%-50% 定金，我开始开发。</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>开发 &amp; 测试</h4>
+                    <p>用 AI 工具快速生成代码，逐行调试优化。开发过程中保持沟通，随时确认进度和效果。</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h4>交付 &amp; 尾款</h4>
+                    <p>完成开发后展示效果，确认没问题后支付尾款，交付完整源码或部署上线。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== 联系 ====== -->
     <section class="contact" id="contact">
         <div class="contact-card">
             <h2><i class="fas fa-handshake"></i> 联系我</h2>
-            <p>有项目需求或合作意向？欢迎通过以下方式联系我，价格优惠、交付靠谱。</p>
+            <p>有项目需求？加微信直接聊，24小时内回复。先沟通需求，免费评估。</p>
             <div class="contact-links">
-                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 3622117675@qq.com</a>
+                <a href="#" onclick="copyWechat();return false;"><i class="fab fa-weixin"></i> 复制微信号</a>
+                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
                 <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#" onclick="copyWechat();return false;" id="wechatLink"><i class="fab fa-weixin"></i> 微信号</a>
-                <a href="#" onclick="alert('联系 刘毅 微信号: L-fov-Y-0629 即可咨询报价');return false;"><i class="fas fa-shopping-bag"></i> 可接单</a>
+                <a href="#" onclick="alert('微信: L-fov-Y-0629\n加好友请备注「接单」')" class="contact-cta"><i class="fas fa-shopping-bag"></i> 立刻询价</a>
             </div>
         </div>
     </section>
 
-    <footer><p>&copy; <span id="year">2026</span> 刘毅 · 用 AI 工具 · 从零开始 · <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener">GitHub</a></p></footer>
+    <footer>
+        <p>&copy; <span id="year">2026</span> 刘毅 · AI 辅助开发者 · 可接单 · <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
 
-    <!-- 返回顶部 -->
     <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="返回顶部"><i class="fas fa-arrow-up"></i></button>
-
-    <!-- 复制微信号提示 -->
     <div class="copy-toast" id="copyToast"></div>
 
     <script>
-        // 微信复制功能
+        // ===== CDN缓存强制刷新 =====
+        (function() {
+            var v = '20260723-01';
+            var last = localStorage.getItem('portfolio_version');
+            if (last && last !== v) {
+                localStorage.setItem('portfolio_version', v);
+                window.location.reload(true);
+            } else if (!last) {
+                localStorage.setItem('portfolio_version', v);
+            }
+        })();
+
+        // ===== 微信复制 =====
         function copyWechat() {
-            const text = 'L-fov-Y-0629';
+            var text = 'L-fov-Y-0629';
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => showCopyToast('微信号已复制: ' + text));
+                navigator.clipboard.writeText(text).then(function() { showToast('微信号已复制: ' + text); });
             } else {
-                // fallback
-                const ta = document.createElement('textarea');
+                var ta = document.createElement('textarea');
                 ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
                 document.body.appendChild(ta); ta.select();
                 document.execCommand('copy'); document.body.removeChild(ta);
-                showCopyToast('微信号已复制: ' + text);
+                showToast('微信号已复制: ' + text);
             }
         }
-        function showCopyToast(msg) {
-            const t = document.getElementById('copyToast');
+        function showToast(msg) {
+            var t = document.getElementById('copyToast');
             t.textContent = msg; t.classList.add('show');
-            clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+            clearTimeout(t._timer); t._timer = setTimeout(function() { t.classList.remove('show'); }, 2500);
         }
 
-        // 主题切换
+        // ===== 主题切换 =====
         function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('themeIcon');
-            const isLight = html.getAttribute('data-theme') === 'light';
+            var html = document.documentElement;
+            var icon = document.getElementById('themeIcon');
+            var isLight = html.getAttribute('data-theme') === 'light';
             html.setAttribute('data-theme', isLight ? 'dark' : 'light');
             icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', isLight ? 'dark' : 'light');
+            try { localStorage.setItem('theme', isLight ? 'dark' : 'light'); } catch(e) {}
         }
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
+        try {
+            var savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        } catch(e) {}
 
-        // 移动端菜单
+        // ===== 移动端菜单 =====
         function toggleMobileMenu() { document.getElementById('navLinks').classList.toggle('open'); }
         function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+        window.toggleTheme = toggleTheme;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.closeMenu = closeMenu;
 
-        // 动态版权年份
+        // ===== 动态年份 =====
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // 返回顶部按钮
-        const backTop = document.getElementById('backTop');
-        window.addEventListener('scroll', () => {
+        // ===== 返回顶部 =====
+        var backTop = document.getElementById('backTop');
+        window.addEventListener('scroll', function() {
             backTop.classList.toggle('visible', window.scrollY > 400);
         }, { passive: true });
 
-        // 滚动高亮导航项
-        const sections = document.querySelectorAll('section[id]');
-        const navItems = document.querySelectorAll('.nav-links a[href^="#"]');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(s => {
+        // ===== 滚动高亮导航 =====
+        var sections = document.querySelectorAll('section[id]');
+        var navItems = document.querySelectorAll('.nav-links a[href^="#"]');
+        window.addEventListener('scroll', function() {
+            var current = '';
+            sections.forEach(function(s) {
                 if (window.scrollY >= s.offsetTop - 200) current = s.id;
             });
-            navItems.forEach(a => {
+            navItems.forEach(function(a) {
                 a.classList.toggle('active', a.getAttribute('href') === '#' + current);
             });
         }, { passive: true });
 
-        // 点击汉堡菜单以外关闭
-        document.addEventListener('click', e => {
+        // ===== 点击汉堡菜单以外关闭 =====
+        document.addEventListener('click', function(e) {
             if (!e.target.closest('nav') && document.getElementById('navLinks').classList.contains('open')) {
                 closeMenu();
             }

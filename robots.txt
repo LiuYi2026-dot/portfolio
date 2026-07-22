@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /blog/article/
+Sitemap: https://liuyi2026-dot.github.io/portfolio/sitemap.xml

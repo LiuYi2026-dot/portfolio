@@ -7,7 +7,7 @@
     <meta name="description" content="刘毅开发的待办事项网页应用 - 支持添加、编辑、标记完成、删除任务，数据保存在浏览器中刷新不丢失。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
     <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #4B3FE3;
@@ -185,9 +185,8 @@
             <button class="danger" onclick="clearAll()" title="清空全部任务"><i class="fas fa-times-circle"></i> 清空全部</button>
         </div>
 
-        <ul class="todo-list" id="todoList">
-            <div class="empty"><i class="fas fa-inbox"></i><p>还没有任务，添加一个开始吧</p></div>
-        </ul>
+        <div class="todo-empty" id="todoEmpty"><div class="empty"><i class="fas fa-inbox"></i><p>还没有任务，添加一个开始吧</p></div></div>
+        <ul class="todo-list" id="todoList"></ul>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -207,33 +206,40 @@
 
         function render() {
             const list = document.getElementById('todoList');
+            const empty = document.getElementById('todoEmpty');
             let filtered = todos;
             if (currentFilter === 'active') filtered = todos.filter(t => !t.done);
             if (currentFilter === 'done') filtered = todos.filter(t => t.done);
 
             if (filtered.length === 0) {
                 const msgs = { all: '还没有任务，添加一个开始吧', active: '所有任务都完成了！', done: '还没有已完成的任务' };
-                list.innerHTML = `<div class="empty"><i class="fas fa-inbox"></i><p>${msgs[currentFilter]}</p></div>`;
+                list.innerHTML = '';
+                empty.innerHTML = `<div class="empty"><i class="fas fa-inbox"></i><p>${msgs[currentFilter]}</p></div>`;
+                empty.style.display = '';
             } else {
-                list.innerHTML = filtered.map((todo, i) => {
+                empty.style.display = 'none';
+                let html = '';
+                for (let i = 0; i < filtered.length; i++) {
+                    const todo = filtered[i];
                     const realIndex = todos.indexOf(todo);
                     const isEditing = editingIndex === realIndex;
-                    return `
-                        <li class="todo-item ${todo.done ? 'done' : ''}">
-                            <div class="todo-checkbox ${todo.done ? 'checked' : ''}" onclick="toggleTodo(${realIndex})">
-                                ${todo.done ? '<i class="fas fa-check"></i>' : ''}
-                            </div>
-                            ${isEditing
-                                ? `<input class="todo-text editing" id="editInput" value="${escapeHtml(todo.text)}" onkeydown="saveEdit(event, ${realIndex})" onblur="cancelEdit(${realIndex})" autofocus>`
-                                : `<span class="todo-text" onclick="startEdit(${realIndex})">${escapeHtml(todo.text)}</span>`
-                            }
-                            <div class="todo-actions">
-                                <button class="edit-btn" onclick="startEdit(${realIndex})" title="编辑"><i class="fas fa-pen"></i></button>
-                                <button class="delete-btn" onclick="deleteTodo(${realIndex})" title="删除"><i class="fas fa-times"></i></button>
-                            </div>
-                        </li>
-                    `;
-                }).join('');
+                    const checked = todo.done ? 'checked' : '';
+                    const icon = todo.done ? '<i class="fas fa-check"></i>' : '';
+                    html += '<li class="todo-item' + (todo.done ? ' done' : '') + '">' +
+                        '<div class="todo-checkbox ' + checked + '" onclick="toggleTodo(' + realIndex + ')" role="checkbox" aria-checked="' + todo.done + '" tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();toggleTodo(' + realIndex + ')}">' +
+                        icon +
+                        '</div>' +
+                        (isEditing
+                            ? '<input class="todo-text editing" id="editInput" value="' + escapeHtml(todo.text) + '" onkeydown="saveEdit(event,' + realIndex + ')" onblur="cancelEdit(' + realIndex + ')" autofocus>'
+                            : '<span class="todo-text" onclick="startEdit(' + realIndex + ')">' + escapeHtml(todo.text) + '</span>'
+                        ) +
+                        '<div class="todo-actions">' +
+                        '<button class="edit-btn" onclick="startEdit(' + realIndex + ')" aria-label="编辑任务"><i class="fas fa-pen"></i></button>' +
+                        '<button class="delete-btn" onclick="deleteTodo(' + realIndex + ')" aria-label="删除任务"><i class="fas fa-times"></i></button>' +
+                        '</div>' +
+                        '</li>';
+                }
+                list.innerHTML = html;
                 const editInput = document.getElementById('editInput');
                 if (editInput) editInput.focus();
             }

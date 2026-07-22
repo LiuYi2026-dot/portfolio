@@ -12,8 +12,6 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 import re
 from urllib.parse import urlparse
-import time
-import csv
 
 # ============ 页面配置 ============
 st.set_page_config(
@@ -126,7 +124,7 @@ if mode == "🌐 网页信息抓取":
                 }
                 resp = requests.get(url, headers=headers, timeout=15)
                 resp.encoding = resp.apparent_encoding
-                soup = BeautifulSoup(resp.text, "html.parser")
+                soup = BeautifulSoup(resp.text, "lxml")
 
                 st.success(f"✅ 成功获取网页！状态码: {resp.status_code}")
 

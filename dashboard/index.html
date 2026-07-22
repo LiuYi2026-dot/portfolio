@@ -7,7 +7,7 @@
     <meta name="description" content="刘毅开发的数据可视化看板 - 使用 ECharts 构建，包含折线图、饼图、柱状图、雷达图、热力图。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <style>
         :root {
@@ -146,8 +146,8 @@
             <a href="../" class="nav-logo"><i class="fas fa-chart-line"></i> 数据看板</a>
             <div class="nav-actions">
                 <span class="time-badge" id="liveTime"><i class="far fa-clock"></i> 加载中...</span>
-                <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
-                <a href="../" class="theme-toggle" style="font-size:0.9rem;" title="返回作品集"><i class="fas fa-home"></i></a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <a href="../" class="theme-toggle" style="font-size:0.9rem;" title="返回作品集" aria-label="返回作品集"><i class="fas fa-home"></i></a>
             </div>
         </div>
     </nav>
@@ -242,7 +242,7 @@
                 </div>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>订单号</th><th>客户</th><th>金额</th><th>状态</th><th>时间</th></tr></thead>
+                        <thead><tr><th scope="col">订单号</th><th scope="col">客户</th><th scope="col">金额</th><th scope="col">状态</th><th scope="col">时间</th></tr></thead>
                         <tbody>
                             <tr><td>#ORD-20260722-001</td><td>张三</td><td>¥2,580</td><td><span class="status-badge active">已完成</span></td><td>2026-07-22 10:30</td></tr>
                             <tr><td>#ORD-20260722-002</td><td>李四</td><td>¥850</td><td><span class="status-badge active">已完成</span></td><td>2026-07-22 11:15</td></tr>
@@ -263,7 +263,7 @@
         // ========== 实时时钟 ==========
         function updateClock() {
             const now = new Date();
-            document.getElementById('liveTime').innerHTML = `<i class="far fa-clock"></i> ${now.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}`;
+            document.getElementById('liveTime').textContent = '🕐 ' + now.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
         }
         updateClock();
         setInterval(updateClock, 1000);

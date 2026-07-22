@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>待办事项 App · 刘毅</title>
+    <meta name="description" content="刘毅开发的待办事项网页应用 - 支持添加、编辑、标记完成、删除任务，数据保存在浏览器中刷新不丢失。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✅</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -23,8 +25,8 @@
             --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         [data-theme="dark"] {
-            --bg: #0D0D1A;
-            --card: #1A1A30;
+            --bg: #0F0F1A;
+            --card: #1E1E36;
             --text: #EEEEF0;
             --text-secondary: #A0A0B8;
             --text-muted: #6B6B88;
@@ -140,8 +142,8 @@
         .todo-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
+            gap: 10px;
+            padding: 12px 14px;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -151,14 +153,14 @@
         .todo-item:hover { box-shadow: var(--shadow); }
         .todo-item.done .todo-text { text-decoration: line-through; color: var(--text-muted); }
         .todo-checkbox {
-            width: 20px; height: 20px;
+            width: 20px; height: 20px; flex-shrink: 0;
             border: 2px solid var(--border);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; flex-shrink: 0;
+            cursor: pointer;
             transition: all var(--transition);
-            background: transparent;
             font-size: 0.7rem;
+            color: transparent;
         }
         .todo-checkbox.checked {
             background: var(--primary);
@@ -169,18 +171,39 @@
             flex: 1;
             font-size: 0.92rem;
             word-break: break-word;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background var(--transition);
         }
-        .todo-delete {
+        .todo-text:hover { background: var(--primary-bg); }
+        .todo-text.editing {
+            background: var(--card);
+            border: 1px solid var(--primary);
+            outline: none;
+            padding: 4px 8px;
+            cursor: text;
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            color: var(--text);
+        }
+        .todo-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .todo-actions button {
             background: none; border: none;
             color: var(--text-muted);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             padding: 4px;
             transition: color var(--transition);
             opacity: 0;
         }
-        .todo-item:hover .todo-delete { opacity: 1; }
-        .todo-delete:hover { color: #EF4444; }
+        .todo-item:hover .todo-actions button { opacity: 1; }
+        .todo-actions .edit-btn:hover { color: var(--primary); }
+        .todo-actions .delete-btn:hover { color: #EF4444; }
 
         /* 空状态 */
         .empty {
@@ -191,9 +214,36 @@
         .empty i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.5; }
         .empty p { font-size: 0.9rem; }
 
+        /* Toast 提示 */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 手机上始终显示按钮 */
+        @media (max-width: 480px) {
+            .todo-actions button { opacity: 1; }
+            .app { padding: 40px 16px; }
         }
     </style>
 </head>
@@ -238,13 +288,25 @@
         </ul>
     </div>
 
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
     <script>
         // ========== 数据管理 ==========
         let todos = JSON.parse(localStorage.getItem('todos') || '[]');
         let currentFilter = 'all';
+        let editingIndex = -1;
 
         function save() {
             localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 2000);
         }
 
         // ========== 渲染 ==========
@@ -256,27 +318,35 @@
             if (currentFilter === 'done') filtered = todos.filter(t => t.done);
 
             if (filtered.length === 0) {
-                const msgs = {
-                    all: '还没有任务，添加一个开始吧',
-                    active: '所有任务都完成了！',
-                    done: '还没有已完成的任务'
-                };
+                const msgs = { all: '还没有任务，添加一个开始吧', active: '所有任务都完成了！', done: '还没有已完成的任务' };
                 list.innerHTML = `<div class="empty"><i class="fas fa-inbox"></i><p>${msgs[currentFilter]}</p></div>`;
             } else {
                 list.innerHTML = filtered.map((todo, i) => {
                     const realIndex = todos.indexOf(todo);
+                    const isEditing = editingIndex === realIndex;
                     return `
                         <li class="todo-item ${todo.done ? 'done' : ''}">
                             <div class="todo-checkbox ${todo.done ? 'checked' : ''}" onclick="toggleTodo(${realIndex})">
                                 ${todo.done ? '<i class="fas fa-check"></i>' : ''}
                             </div>
-                            <span class="todo-text">${escapeHtml(todo.text)}</span>
-                            <button class="todo-delete" onclick="deleteTodo(${realIndex})" title="删除">
-                                <i class="fas fa-times"></i>
-                            </button>
+                            ${isEditing
+                                ? `<input class="todo-text editing" id="editInput" value="${escapeHtml(todo.text)}" onkeydown="saveEdit(event, ${realIndex})" autofocus>`
+                                : `<span class="todo-text" ondblclick="startEdit(${realIndex})">${escapeHtml(todo.text)}</span>`
+                            }
+                            <div class="todo-actions">
+                                <button class="edit-btn" onclick="startEdit(${realIndex})" title="编辑"><i class="fas fa-pen"></i></button>
+                                <button class="delete-btn" onclick="deleteTodo(${realIndex})" title="删除"><i class="fas fa-times"></i></button>
+                            </div>
                         </li>
                     `;
                 }).join('');
+
+                // 自动聚焦编辑框
+                const editInput = document.getElementById('editInput');
+                if (editInput) {
+                    const len = editInput.value.length;
+                    editInput.setSelectionRange(len, len);
+                }
             }
 
             document.getElementById('totalCount').textContent = todos.length;
@@ -284,25 +354,31 @@
         }
 
         function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
         }
 
         // ========== 操作 ==========
         function addTodo() {
             const input = document.getElementById('todoInput');
             const text = input.value.trim();
-            if (!text) return;
+            if (!text) {
+                showToast('请输入任务内容');
+                input.focus();
+                return;
+            }
             todos.push({ text, done: false, createdAt: Date.now() });
             save();
             render();
             input.value = '';
             input.focus();
+            showToast('任务已添加');
         }
 
         function toggleTodo(index) {
             if (index < 0 || index >= todos.length) return;
+            if (editingIndex === index) { editingIndex = -1; }
             todos[index].done = !todos[index].done;
             save();
             render();
@@ -311,16 +387,60 @@
         function deleteTodo(index) {
             if (index < 0 || index >= todos.length) return;
             todos.splice(index, 1);
+            if (editingIndex === index) editingIndex = -1;
+            else if (editingIndex > index) editingIndex--;
             save();
+            render();
+            showToast('任务已删除');
+        }
+
+        // ========== 编辑功能 ==========
+        function startEdit(index) {
+            if (index < 0 || index >= todos.length) return;
+            if (todos[index].done) return;
+            editingIndex = index;
             render();
         }
 
+        function saveEdit(event, index) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const text = input.value.trim();
+                if (text) {
+                    todos[index].text = text;
+                    save();
+                    showToast('任务已更新');
+                }
+                editingIndex = -1;
+                render();
+            }
+            if (event.key === 'Escape') {
+                editingIndex = -1;
+                render();
+            }
+        }
+
+        // 点击其他地方取消编辑
+        document.addEventListener('click', function(e) {
+            if (editingIndex === -1) return;
+            if (!e.target.closest('.todo-item')) {
+                editingIndex = -1;
+                render();
+            }
+        });
+
         function clearCompleted() {
-            if (!todos.some(t => t.done)) return;
-            if (!confirm('确定清除所有已完成的任务吗？')) return;
+            const doneCount = todos.filter(t => t.done).length;
+            if (doneCount === 0) {
+                showToast('没有已完成的任务');
+                return;
+            }
+            if (!confirm(`确定清除所有已完成的任务吗？（共 ${doneCount} 项）`)) return;
             todos = todos.filter(t => !t.done);
+            if (editingIndex >= todos.length) editingIndex = -1;
             save();
             render();
+            showToast(`已清除 ${doneCount} 项已完成任务`);
         }
 
         function setFilter(filter) {
@@ -328,10 +448,10 @@
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.filter === filter);
             });
+            editingIndex = -1;
             render();
         }
 
-        // 回车添加
         document.getElementById('todoInput').addEventListener('keydown', e => {
             if (e.key === 'Enter') addTodo();
         });
@@ -339,22 +459,18 @@
         // ========== 主题 ==========
         function toggleTheme() {
             const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
             const isLight = html.getAttribute('data-theme') === 'light';
             html.setAttribute('data-theme', isLight ? 'dark' : 'light');
             localStorage.setItem('theme', isLight ? 'dark' : 'light');
-            document.getElementById('themeBtn').innerHTML = isLight
-                ? '<i class="fas fa-sun"></i>'
-                : '<i class="fas fa-moon"></i>';
+            btn.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         }
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeBtn').innerHTML = savedTheme === 'dark'
-                ? '<i class="fas fa-sun"></i>'
-                : '<i class="fas fa-moon"></i>';
+            document.getElementById('themeBtn').innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         }
 
-        // 初始渲染
         render();
     </script>
 </body>

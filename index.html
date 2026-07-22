@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>刘毅 · 作品集</title>
+    <title>刘毅 · AI辅助开发者 · 作品集</title>
+    <meta name="description" content="刘毅的个人作品集 - AI辅助开发的Web应用，包括待办事项App、技术博客和数据可视化看板。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -71,8 +73,16 @@
             background: none; border: 1px solid var(--border); border-radius: 8px;
             width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--text-secondary); transition: all var(--transition);
+            font-size: 0.9rem;
         }
         .theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+        .mobile-menu-btn {
+            display: none; background: none; border: 1px solid var(--border); border-radius: 8px;
+            width: 36px; height: 36px; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-secondary); font-size: 1.1rem;
+            transition: all var(--transition);
+        }
+        .mobile-menu-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         /* Hero */
         .hero {
@@ -84,7 +94,11 @@
             margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
             font-size: 2.5rem; color: #fff; font-weight: 600;
         }
-        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero h1 {
+            font-size: 2.2rem; font-weight: 700; margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
         .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 500px; margin: 0 auto 24px; }
         .hero-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .hero-tags span {
@@ -143,10 +157,16 @@
         }
         .contact-links a:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
 
-        /* 页脚 */
         footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
 
         @media (max-width: 640px) {
+            .mobile-menu-btn { display: flex; }
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column; position: absolute; top: var(--nav-height);
+                left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border);
+                padding: 16px 24px; gap: 16px; z-index: 999;
+            }
             .hero h1 { font-size: 1.7rem; }
             .projects-grid { grid-template-columns: 1fr; }
         }
@@ -156,12 +176,15 @@
     <nav>
         <div class="nav-inner">
             <a href="#" class="nav-logo"><i class="fas fa-code"></i> 刘毅</a>
-            <ul class="nav-links">
-                <li><a href="#projects">项目</a></li>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#projects" onclick="closeMenu()">项目</a></li>
                 <li><a href="blog/">博客</a></li>
-                <li><a href="#contact">联系</a></li>
+                <li><a href="#contact" onclick="closeMenu()">联系</a></li>
             </ul>
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+            </div>
         </div>
     </nav>
 
@@ -182,11 +205,10 @@
         <h2 class="section-title"><i class="fas fa-folder-open"></i> 我的项目</h2>
         <p class="section-sub">用 AI 工具辅助开发的 3 个作品，全部已上线可访问。</p>
         <div class="projects-grid">
-            <!-- 项目1: 待办事项 -->
             <div class="project-card">
                 <div class="project-icon purple"><i class="fas fa-check-double"></i></div>
                 <h3>待办事项 App</h3>
-                <p>一个功能完整的待办事项网页应用。支持添加任务、标记完成、删除任务，数据保存在浏览器中刷新不丢失。</p>
+                <p>一个功能完整的待办事项网页应用。支持添加任务、标记完成、编辑、删除任务，数据保存在浏览器中刷新不丢失。</p>
                 <div class="project-tags">
                     <span>JavaScript</span>
                     <span>LocalStorage</span>
@@ -194,7 +216,6 @@
                 </div>
                 <a href="todo/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <!-- 项目2: 博客 -->
             <div class="project-card">
                 <div class="project-icon green"><i class="fas fa-pen-fancy"></i></div>
                 <h3>个人技术博客</h3>
@@ -206,7 +227,6 @@
                 </div>
                 <a href="blog/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <!-- 项目3: 数据看板 -->
             <div class="project-card">
                 <div class="project-icon blue"><i class="fas fa-chart-line"></i></div>
                 <h3>数据可视化看板</h3>
@@ -242,20 +262,21 @@
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('themeIcon');
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                html.setAttribute('data-theme', 'light');
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light');
-            }
+            const isLight = html.getAttribute('data-theme') === 'light';
+            html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isLight ? 'dark' : 'light');
         }
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('open');
         }
     </script>
 </body>

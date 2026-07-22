@@ -4,79 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AI 智能图像工坊 · 刘毅</title>
-<meta name="description" content="在线智能图像处理工具 - 滤镜、调色、裁剪、绘画，基于Canvas的Web图像编辑器">
+<meta name="description" content="在线图像编辑器 - 滤镜、调色、旋转、Canvas 实时处理，不上传服务器">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0A0A12; --bg2:#12121E; --card:rgba(255,255,255,0.04);
-  --card-border:rgba(255,255,255,0.06); --card-hover:rgba(255,255,255,0.08);
-  --text:#F1F1F6; --text2:#8888A0; --text3:#555570;
-  --primary:#6C5CE7; --primary-light:#A29BFE; --primary-glow:rgba(108,92,231,0.3);
-  --accent:#00CEC9; --accent-glow:rgba(0,206,201,0.3);
-  --radius:16px; --radius-lg:24px; --radius-xl:32px;
-  --shadow:0 8px 32px rgba(0,0,0,0.4); --shadow-lg:0 20px 60px rgba(0,0,0,0.5);
-  --nav:72px; --font:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;
-  --transition:0.4s cubic-bezier(0.22,1,0.36,1);
-}
+:root{--bg:#0A0A12;--bg2:#12121E;--card:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.06);--card-hover:rgba(255,255,255,0.08);--text:#F1F1F6;--text2:#8888A0;--text3:#555570;--primary:#6C5CE7;--primary-light:#A29BFE;--primary-glow:rgba(108,92,231,0.3);--accent:#00CEC9;--radius:16px;--radius-lg:24px;--radius-xl:32px;--shadow:0 8px 32px rgba(0,0,0,0.4);--shadow-lg:0 20px 60px rgba(0,0,0,0.5);--nav:72px;--font:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;--transition:0.4s cubic-bezier(0.22,1,0.36,1)}
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;background-image:radial-gradient(ellipse at 20% 50%,rgba(108,92,231,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(0,206,201,0.05) 0%,transparent 50%)}
 nav{position:fixed;top:0;left:0;right:0;height:var(--nav);z-index:100;background:rgba(10,10,18,0.8);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid var(--card-border)}
 .nav-inner{max-width:1200px;margin:0 auto;padding:0 28px;height:100%;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem;color:var(--text);text-decoration:none}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none}
 .nav-logo i{font-size:1.4rem;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-actions{display:flex;gap:8px}
 .btn-icon{width:38px;height:38px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);font-size:.95rem;text-decoration:none}
 .btn-icon:hover{background:var(--card-hover);color:var(--text);border-color:var(--primary)}
 
-.app{padding-top:calc(var(--nav) + 28px);max-width:1200px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:60px}
+.app{padding-top:calc(var(--nav) + 28px);max-width:1200px;margin:0 auto;padding:0 24px 60px}
 
-/* Hero */
 .hero{text-align:center;padding:40px 0 48px}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:var(--primary-glow);border:1px solid rgba(108,92,231,0.2);font-size:.78rem;color:var(--primary-light);margin-bottom:16px;font-weight:500}
 .hero h1{font-size:2.8rem;font-weight:800;line-height:1.15;margin-bottom:14px;background:linear-gradient(135deg,#fff 0%,var(--primary-light) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--text2);font-size:1.05rem;max-width:520px;margin:0 auto 24px;line-height:1.7}
+.hero p{color:var(--text2);font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.7}
 
-/* Upload Zone */
 .upload-zone{max-width:560px;margin:0 auto 48px;padding:48px;border-radius:var(--radius-xl);border:2px dashed var(--card-border);background:var(--card);text-align:center;cursor:pointer;transition:all var(--transition);position:relative;overflow:hidden}
-.upload-zone::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius-xl);background:linear-gradient(135deg,var(--primary),var(--accent));opacity:0;transition:opacity var(--transition);z-index:0;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask-composite:exclude;padding:2px}
+.upload-zone::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius-xl);background:linear-gradient(135deg,var(--primary),var(--accent));opacity:0;transition:opacity var(--transition);z-index:0;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask-composite:exclude;padding:3px}
 .upload-zone:hover{border-color:transparent}
 .upload-zone:hover::before{opacity:1}
-.upload-zone.has-image{border-color:transparent;cursor:default}
+.upload-zone.has-image{border-color:transparent;cursor:pointer}
 .upload-zone.has-image::before{opacity:1}
 .upload-zone .upload-icon{font-size:3rem;color:var(--primary-light);margin-bottom:12px;position:relative;z-index:1}
 .upload-zone p{color:var(--text2);position:relative;z-index:1}
 .upload-zone .upload-btn{display:inline-block;margin-top:14px;padding:10px 28px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#8B7FFF);color:#fff;font-weight:600;font-size:.88rem;position:relative;z-index:1;transition:all var(--transition);border:none;cursor:pointer;font-family:var(--font)}
 .upload-zone .upload-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--primary-glow)}
-.upload-zone img{max-height:320px;border-radius:12px;position:relative;z-index:1;max-width:100%}
+.upload-zone .img-preview{max-height:200px;border-radius:12px;position:relative;z-index:1;max-width:100%;display:none;margin-bottom:12px}
+.upload-zone .img-preview.show{display:inline-block}
 
-/* Editor Grid */
-.editor-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;margin-top:8px}
+.editor-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;margin-top:8px;display:none}
+.editor-grid.show{display:grid}
+
 .preview-panel{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--card-border);padding:24px;overflow:hidden}
 .preview-panel .canvas-wrap{display:flex;align-items:center;justify-content:center;min-height:300px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative}
 .preview-panel canvas{max-width:100%;max-height:400px;border-radius:8px;display:block}
-.preview-panel .empty-preview{text-align:center;padding:60px 20px;color:var(--text3)}
-.preview-panel .empty-preview i{font-size:3rem;margin-bottom:10px;opacity:.4}
+.preview-panel .img-info{display:flex;gap:20px;justify-content:center;margin-top:14px;font-size:.78rem;color:var(--text3)}
+.preview-panel .img-info span{display:flex;align-items:center;gap:4px}
 
-/* Controls Panel */
-.controls-panel{display:flex;flex-direction:column;gap:16px}
-.control-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--card-border);padding:20px}
-.control-card h3{font-size:.82rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
-.control-group{display:flex;flex-direction:column;gap:12px}
-.slider-group label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text2)}
-.slider-group label span{color:var(--text);font-weight:600}
-input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--card-border);outline:none;transition:background var(--transition)}
+.controls-panel{display:flex;flex-direction:column;gap:12px}
+.control-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--card-border);padding:18px 20px}
+.control-card h3{font-size:.78rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.control-group{display:flex;flex-direction:column;gap:10px}
+.slider-group label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text2)}
+.slider-group label span{color:var(--text);font-weight:600;min-width:30px;text-align:right}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--card-border);outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));cursor:pointer;box-shadow:0 0 20px var(--primary-glow);border:2px solid var(--bg)}
 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));cursor:pointer;border:2px solid var(--bg)}
 
 .filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.filter-btn{padding:8px 6px;border-radius:10px;border:1px solid var(--card-border);background:transparent;color:var(--text2);font-size:.75rem;cursor:pointer;transition:all var(--transition);font-family:var(--font);text-align:center}
+.filter-btn{padding:8px 4px;border-radius:10px;border:1px solid var(--card-border);background:transparent;color:var(--text2);font-size:.73rem;cursor:pointer;transition:all var(--transition);font-family:var(--font);text-align:center}
 .filter-btn:hover{background:var(--card-hover);color:var(--text)}
 .filter-btn.active{background:var(--primary-glow);border-color:var(--primary);color:#fff}
+.filter-btn .f-icon{display:block;font-size:.9rem;margin-bottom:2px}
 
-.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .action-btn{padding:10px;border-radius:10px;border:1px solid var(--card-border);background:var(--card);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all var(--transition);font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px}
 .action-btn:hover{background:var(--card-hover);color:var(--text)}
 .action-btn.primary{background:linear-gradient(135deg,var(--primary),#8B7FFF);color:#fff;border:none}
@@ -85,71 +75,69 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .action-btn.danger:hover{background:rgba(255,107,107,0.1);border-color:#FF6B6B}
 .action-btn:disabled{opacity:.3;cursor:not-allowed;transform:none!important}
 
-/* History */
-.history-grid{display:flex;gap:6px;flex-wrap:wrap}
-.history-thumb{width:44px;height:44px;border-radius:8px;border:1px solid var(--card-border);overflow:hidden;cursor:pointer;transition:all var(--transition);opacity:.5}
-.history-thumb:hover{opacity:1;border-color:var(--primary)}
-.history-thumb.active{opacity:1;border-color:var(--primary);box-shadow:0 0 15px var(--primary-glow)}
-.history-thumb img{width:100%;height:100%;object-fit:cover}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 24px;border-radius:10px;font-size:.85rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 footer{text-align:center;padding:32px 24px;color:var(--text3);font-size:.82rem;border-top:1px solid var(--card-border);margin-top:60px}
 footer a{color:var(--primary-light);text-decoration:none}
 
-@media(max-width:860px){.editor-grid{grid-template-columns:1fr}
+@media(max-width:860px){.editor-grid,.editor-grid.show{grid-template-columns:1fr}
 .hero h1{font-size:2rem}
 .filter-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:480px){.hero h1{font-size:1.6rem}
 .upload-zone{padding:28px 20px}
-.control-card{padding:16px}
+.control-card{padding:14px 16px}
+.preview-panel{padding:16px}
+.preview-panel .canvas-wrap{min-height:200px}
 }
 </style>
 </head>
 <body>
-<nav><div class="nav-inner">
+<nav>
+<div class="nav-inner">
 <a href="../" class="nav-logo"><i class="fas fa-palette"></i> 图像工坊</a>
 <div class="nav-actions">
-<button class="btn-icon" onclick="document.documentElement.setAttribute('data-theme',document.documentElement.getAttribute('data-theme')==='light'?'dark':'light')" aria-label="主题"><i class="fas fa-sun" id="themeIcon"></i></button>
-<a href="../" class="btn-icon" title="返回"><i class="fas fa-home"></i></a>
+<button class="btn-icon" onclick="toggleTheme()" id="themeBtn" aria-label="主题"><i class="fas fa-sun"></i></button>
+<a href="../" class="btn-icon" title="返回作品集"><i class="fas fa-home"></i></a>
 </div></div></nav>
 
 <div class="app">
   <div class="hero">
-    <div class="hero-badge"><i class="fas fa-magic"></i> 基于 Canvas · 浏览器端处理</div>
+    <div class="hero-badge"><i class="fas fa-magic"></i> 浏览器端处理 · 不上传服务器</div>
     <h1>AI 智能图像工坊</h1>
-    <p>上传图片，在线滤镜、调色、裁剪、绘画。所有处理在浏览器本地完成，不上传服务器。</p>
+    <p>上传图片，在线滤镜、调色、旋转。所有处理在浏览器本地完成，安全快速。</p>
   </div>
 
-  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+  <div class="upload-zone" id="uploadZone">
     <input type="file" id="fileInput" accept="image/*" style="display:none">
     <div class="upload-icon" id="uploadIcon"><i class="fas fa-cloud-upload-alt"></i></div>
-    <p id="uploadText">拖拽图片到这里，或点击上传</p>
+    <p id="uploadText">拖拽图片到此处，或点击上传</p>
     <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">选择图片</button>
+    <img class="img-preview" id="imgPreview" alt="预览">
   </div>
 
-  <div class="editor-grid" id="editorGrid" style="display:none">
+  <div class="editor-grid" id="editorGrid">
     <div class="preview-panel">
       <div class="canvas-wrap" id="canvasWrap">
         <canvas id="mainCanvas"></canvas>
-        <div class="empty-preview" id="emptyPreview" style="display:none"><i class="fas fa-image"></i><p>暂无图片</p></div>
       </div>
+      <div class="img-info" id="imgInfo"></div>
     </div>
 
-    <div class="controls-panel" id="controlsPanel">
-      <!-- Filters -->
+    <div class="controls-panel">
       <div class="control-card">
         <h3><i class="fas fa-magic"></i> 滤镜</h3>
         <div class="filter-grid">
-          <button class="filter-btn active" data-filter="original">原图</button>
-          <button class="filter-btn" data-filter="grayscale">黑白</button>
-          <button class="filter-btn" data-filter="sepia">复古</button>
-          <button class="filter-btn" data-filter="invert">负片</button>
-          <button class="filter-btn" data-filter="warm">暖色</button>
-          <button class="filter-btn" data-filter="cool">冷色</button>
+          <button class="filter-btn active" data-filter="original"><span class="f-icon"><i class="fas fa-image"></i></span>原图</button>
+          <button class="filter-btn" data-filter="grayscale"><span class="f-icon">◐</span>黑白</button>
+          <button class="filter-btn" data-filter="sepia"><span class="f-icon">🏾</span>复古</button>
+          <button class="filter-btn" data-filter="invert"><span class="f-icon">◑</span>负片</button>
+          <button class="filter-btn" data-filter="warm"><span class="f-icon">☀️</span>暖色</button>
+          <button class="filter-btn" data-filter="cool"><span class="f-icon">❄️</span>冷色</button>
         </div>
       </div>
 
-      <!-- Adjust -->
       <div class="control-card">
         <h3><i class="fas fa-sliders-h"></i> 调色</h3>
         <div class="control-group">
@@ -160,7 +148,14 @@ footer a{color:var(--primary-light);text-decoration:none}
         </div>
       </div>
 
-      <!-- Actions -->
+      <div class="control-card">
+        <h3><i class="fas fa-crop-alt"></i> 变换</h3>
+        <div class="action-row">
+          <button class="action-btn" id="rotateLeftBtn"><i class="fas fa-undo-alt"></i> 左旋</button>
+          <button class="action-btn" id="rotateRightBtn"><i class="fas fa-redo-alt"></i> 右旋</button>
+        </div>
+      </div>
+
       <div class="action-row">
         <button class="action-btn primary" id="downloadBtn" disabled><i class="fas fa-download"></i> 下载</button>
         <button class="action-btn danger" id="resetBtn" disabled><i class="fas fa-undo"></i> 重置</button>
@@ -170,148 +165,168 @@ footer a{color:var(--primary-light);text-decoration:none}
 </div>
 
 <footer><p>&copy; 2026 刘毅 · 纯前端图像处理 · <a href="../">返回作品集</a></p></footer>
+<div class="toast" id="toast"></div>
 
 <script>
 (function(){
-  var canvas=document.getElementById('mainCanvas'),ctx=canvas.getContext('2d');
-  var uploadZone=document.getElementById('uploadZone'),fileInput=document.getElementById('fileInput');
-  var editorGrid=document.getElementById('editorGrid');
-  var downloadBtn=document.getElementById('downloadBtn'),resetBtn=document.getElementById('resetBtn');
-  var originalImage=null,currentFilter='original';
-  var originalData=null;
+  var c=document.getElementById('mainCanvas'),ctx=c.getContext('2d');
+  var uz=document.getElementById('uploadZone'),fi=document.getElementById('fileInput');
+  var eg=document.getElementById('editorGrid'),ip=document.getElementById('imgPreview');
+  var db=document.getElementById('downloadBtn'),rb=document.getElementById('resetBtn');
+  var roL=document.getElementById('rotateLeftBtn'),roR=document.getElementById('rotateRightBtn');
+  var img=null,filter='original',rotation=0;
+  var origW=0,origH=0;
 
-  // Theme
-  var themeIcon=document.getElementById('themeIcon');
-  var dt=document.documentElement.getAttribute('data-theme');
-  themeIcon.className=dt==='light'?'fas fa-moon':'fas fa-sun';
+  // Theme persistence
+  function toggleTheme(){
+    var h=document.documentElement,b=document.getElementById('themeBtn');
+    var l=h.getAttribute('data-theme')==='light';
+    h.setAttribute('data-theme',l?'dark':'light');
+    try{localStorage.setItem('image_theme',l?'dark':'light')}catch(e){}
+    b.innerHTML=l?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';
+  }
+  window.toggleTheme=toggleTheme;
+  try{var st=localStorage.getItem('image_theme');if(st){
+    document.documentElement.setAttribute('data-theme',st);
+    document.getElementById('themeBtn').innerHTML=st==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+  }}catch(e){}
 
-  // Upload
-  fileInput.addEventListener('change',function(e){
-    if(e.target.files&&e.target.files[0]){
-      var reader=new FileReader();
-      reader.onload=function(ev){
-        var img=new Image();
-        img.onload=function(){
-          originalImage=img;
-          uploadZone.classList.add('has-image');
-          document.getElementById('uploadIcon').innerHTML='<i class="fas fa-check-circle" style="color:var(--accent)"></i>';
-          document.getElementById('uploadText').textContent='点击重新选择';
-          editorGrid.style.display='grid';
-          initCanvas(img);
-          downloadBtn.disabled=false;
-          resetBtn.disabled=false;
-        };
-        img.src=ev.target.result;
+  function toast(m){
+    var t=document.getElementById('toast');
+    t.textContent=m;t.classList.add('show');
+    clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show')},2000);
+  }
+
+  fi.addEventListener('change',function(e){
+    if(!e.target.files||!e.target.files[0])return;
+    var file=e.target.files[0];
+    if(!file.type.startsWith('image/')){toast('请选择图片文件');return;}
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      var im=new Image();
+      im.onload=function(){
+        img=im;origW=im.width;origH=im.height;rotation=0;
+        uz.classList.add('has-image');
+        ip.src=ev.target.result;ip.classList.add('show');
+        document.getElementById('uploadIcon').innerHTML='<i class="fas fa-check-circle" style="color:var(--accent)"></i>';
+        document.getElementById('uploadText').textContent=file.name+' ('+Math.round(file.size/1024)+'KB)';
+        eg.classList.add('show');
+        db.disabled=false;rb.disabled=false;
+        fitCanvas();
+        applyAll();
+        showInfo();
+        toast('图片加载成功！');
       };
-      reader.readAsDataURL(e.target.files[0]);
-    }
+      im.onerror=function(){toast('图片加载失败，请尝试其他文件');};
+      im.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
   });
 
-  function initCanvas(img){
+  function fitCanvas(){
     var wrap=document.getElementById('canvasWrap');
-    var maxW=wrap.clientWidth-32,maxH=400;
-    var w=img.width,h=img.height,scale=Math.min(maxW/w,maxH/h,1);
-    canvas.width=w*scale;canvas.height=h*scale;
-    ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    originalData=ctx.getImageData(0,0,canvas.width,canvas.height);
-    currentFilter='original';
-    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='original');});
-    document.getElementById('brightness').value=0;document.getElementById('brightnessVal').textContent='0';
-    document.getElementById('contrast').value=0;document.getElementById('contrastVal').textContent='0';
-    document.getElementById('saturation').value=0;document.getElementById('saturationVal').textContent='0';
-    document.getElementById('blur').value=0;document.getElementById('blurVal').textContent='0';
+    var mw=wrap.clientWidth-32,mh=400;
+    var s=Math.min(mw/origW,mh/origH,1);
+    c.width=origW*s;c.height=origH*s;
+  }
+
+  function showInfo(){
+    document.getElementById('imgInfo').innerHTML=
+      '<span><i class="fas fa-arrows-alt"></i> '+origW+'×'+origH+'</span>'+
+      '<span><i class="fas fa-magic"></i> '+filter+'</span>';
   }
 
   function applyAll(){
-    if(!originalImage)return;
-    ctx.drawImage(originalImage,0,0,canvas.width,canvas.height);
-    var b=parseInt(document.getElementById('brightness').value)||0;
-    var c=parseInt(document.getElementById('contrast').value)||0;
-    var s=parseInt(document.getElementById('saturation').value)||0;
-    var bl=parseInt(document.getElementById('blur').value)||0;
-    if(bl>0){ctx.filter='blur('+bl+'px)';ctx.drawImage(originalImage,0,0,canvas.width,canvas.height);ctx.filter='none';}
-    applyFilter(currentFilter);
-    if(b||c||s){
-      var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-      var d=imageData.data;
-      for(var i=0;i<d.length;i+=4){
-        if(b){d[i]=Math.max(0,Math.min(255,d[i]+b*2.55));d[i+1]=Math.max(0,Math.min(255,d[i+1]+b*2.55));d[i+2]=Math.max(0,Math.min(255,d[i+2]+b*2.55));}
-        if(c){var cf=(259*(c*2.55+255))/(255*(259-c*2.55));d[i]=Math.max(0,Math.min(255,cf*(d[i]-128)+128));d[i+1]=Math.max(0,Math.min(255,cf*(d[i+1]-128)+128));d[i+2]=Math.max(0,Math.min(255,cf*(d[i+2]-128)+128));}
-        if(s){var gray=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];var sf=1+s/100;d[i]=Math.max(0,Math.min(255,gray+sf*(d[i]-gray)));d[i+1]=Math.max(0,Math.min(255,gray+sf*(d[i+1]-gray)));d[i+2]=Math.max(0,Math.min(255,gray+sf*(d[i+2]-gray)));}
-      }
-      ctx.putImageData(imageData,0,0);
-    }
-    document.getElementById('brightnessVal').textContent=b;
-    document.getElementById('contrastVal').textContent=c;
-    document.getElementById('saturationVal').textContent=s;
-    document.getElementById('blurVal').textContent=bl;
-  }
+    if(!img)return;
+    var w=c.width,h=c.height;
+    ctx.clearRect(0,0,w,h);
+    ctx.save();
+    ctx.translate(w/2,h/2);
+    ctx.rotate(rotation*Math.PI/180);
+    ctx.drawImage(img,-origW/2*(w/origW),-origH/2*(h/origH),w,h);
+    ctx.restore();
 
-  function applyFilter(filter){
-    if(!originalImage||filter==='original')return;
-    var imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-    var d=imageData.data;
-    for(var i=0;i<d.length;i+=4){
-      var r=d[i],g=d[i+1],b=d[i+2];
+    var bl=parseInt(document.getElementById('blur').value)||0;
+    if(bl>0){ctx.filter='blur('+bl+'px)';ctx.drawImage(c,0,0);ctx.filter='none';}
+
+    var imageData=ctx.getImageData(0,0,w,h);
+    var d=imageData.data,a=d.length;
+    var r,g,b,gray,cf,sf;
+    var bv=parseInt(document.getElementById('brightness').value)||0;
+    var cv=parseInt(document.getElementById('contrast').value)||0;
+    var sv=parseInt(document.getElementById('saturation').value)||0;
+
+    for(var i=0;i<a;i+=4){
+      r=d[i];g=d[i+1];b=d[i+2];
       switch(filter){
-        case'grayscale':var gray=0.299*r+0.587*g+0.114*b;d[i]=d[i+1]=d[i+2]=gray;break;
+        case'grayscale':gray=0.299*r+0.587*g+0.114*b;d[i]=d[i+1]=d[i+2]=gray;break;
         case'sepia':d[i]=Math.min(255,r*0.393+g*0.769+b*0.189);d[i+1]=Math.min(255,r*0.349+g*0.686+b*0.168);d[i+2]=Math.min(255,r*0.272+g*0.534+b*0.131);break;
         case'invert':d[i]=255-r;d[i+1]=255-g;d[i+2]=255-b;break;
         case'warm':d[i]=Math.min(255,r+30);d[i+1]=Math.min(255,g+15);d[i+2]=Math.max(0,b-15);break;
         case'cool':d[i]=Math.max(0,r-15);d[i+1]=Math.min(255,g+10);d[i+2]=Math.min(255,b+30);break;
       }
+      if(bv){d[i]=Math.max(0,Math.min(255,d[i]+bv*2.55));d[i+1]=Math.max(0,Math.min(255,d[i+1]+bv*2.55));d[i+2]=Math.max(0,Math.min(255,d[i+2]+bv*2.55));}
+      if(cv){cf=(259*(cv*2.55+255))/(255*(259-cv*2.55));d[i]=Math.max(0,Math.min(255,cf*(d[i]-128)+128));d[i+1]=Math.max(0,Math.min(255,cf*(d[i+1]-128)+128));d[i+2]=Math.max(0,Math.min(255,cf*(d[i+2]-128)+128));}
+      if(sv){gray=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];sf=1+sv/100;d[i]=Math.max(0,Math.min(255,gray+sf*(d[i]-gray)));d[i+1]=Math.max(0,Math.min(255,gray+sf*(d[i+1]-gray)));d[i+2]=Math.max(0,Math.min(255,gray+sf*(d[i+2]-gray)));}
     }
     ctx.putImageData(imageData,0,0);
+
+    document.getElementById('brightnessVal').textContent=bv;
+    document.getElementById('contrastVal').textContent=cv;
+    document.getElementById('saturationVal').textContent=sv;
+    document.getElementById('blurVal').textContent=bl;
+    showInfo();
   }
 
-  // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  // Filters
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.filter-btn').forEach(function(x){x.classList.remove('active')});
       this.classList.add('active');
-      currentFilter=this.dataset.filter;
+      filter=this.dataset.filter;
       applyAll();
     });
   });
 
   // Sliders
-  document.querySelectorAll('input[type=range]').forEach(function(slider){
-    slider.addEventListener('input',function(){applyAll();});
+  document.querySelectorAll('input[type=range]').forEach(function(s){
+    s.addEventListener('input',function(){applyAll()});
   });
 
+  // Rotate
+  roL.addEventListener('click',function(){rotation=(rotation-90)%360;if(img)applyAll();});
+  roR.addEventListener('click',function(){rotation=(rotation+90)%360;if(img)applyAll();});
+
   // Reset
-  resetBtn.addEventListener('click',function(){
-    if(!originalImage)return;
-    initCanvas(originalImage);
+  rb.addEventListener('click',function(){
+    if(!img)return;
+    rotation=0;
+    document.getElementById('brightness').value=0;
+    document.getElementById('contrast').value=0;
+    document.getElementById('saturation').value=0;
+    document.getElementById('blur').value=0;
+    filter='original';
+    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='original')});
+    applyAll();
+    toast('已重置');
   });
 
   // Download
-  downloadBtn.addEventListener('click',function(){
+  db.addEventListener('click',function(){
     var link=document.createElement('a');
     link.download='edited_image.png';
-    link.href=canvas.toDataURL('image/png');
+    link.href=c.toDataURL('image/png');
     link.click();
+    toast('✅ 图片已下载');
   });
 
   // Drag & Drop
-  uploadZone.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='var(--primary)';});
-  uploadZone.addEventListener('dragleave',function(e){e.preventDefault();this.style.borderColor='';});
-  uploadZone.addEventListener('drop',function(e){
+  uz.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='var(--primary)'});
+  uz.addEventListener('dragleave',function(e){e.preventDefault();this.style.borderColor=''});
+  uz.addEventListener('drop',function(e){
     e.preventDefault();this.style.borderColor='';
     if(e.dataTransfer.files&&e.dataTransfer.files[0]){
-      fileInput.files=e.dataTransfer.files;
-      fileInput.dispatchEvent(new Event('change'));
-    }
-  });
-
-  // Resize
-  window.addEventListener('resize',function(){
-    if(originalImage){
-      var wrap=document.getElementById('canvasWrap');
-      var maxW=wrap.clientWidth-32,maxH=400;
-      var w=originalImage.width,h=originalImage.height,scale=Math.min(maxW/w,maxH/h,1);
-      canvas.width=w*scale;canvas.height=h*scale;
-      applyAll();
+      fi.files=e.dataTransfer.files;fi.dispatchEvent(new Event('change'));
     }
   });
 })();

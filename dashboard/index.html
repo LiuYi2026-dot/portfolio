@@ -6,7 +6,7 @@
     <title>数据可视化看板 · 刘毅</title>
     <meta name="description" content="刘毅开发的数据可视化看板 - 使用 ECharts 构建，包含折线图、饼图、柱状图、雷达图、热力图。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <style>
@@ -25,7 +25,7 @@
             --radius: 14px;
             --nav-height: 64px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         [data-theme="dark"] {
             --bg: #0F0F1A;
@@ -46,7 +46,9 @@
             line-height: 1.6;
             transition: background var(--transition), color var(--transition);
             min-height: 100vh;
+            animation: pageIn 0.4s ease;
         }
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
         nav {
             position: fixed; top: 0; left: 0; right: 0;
             height: var(--nav-height); z-index: 1000;
@@ -55,7 +57,7 @@
             background: rgba(255,255,255,0.85);
             transition: background var(--transition), border-color var(--transition);
         }
-        [data-theme="dark"] nav { background: rgba(15,15,26,0.85); }
+        [data-theme="dark"] nav { background: rgba(15,15,26,0.9); }
         .nav-inner {
             max-width: 1300px; margin: 0 auto; padding: 0 24px;
             height: 100%; display: flex; align-items: center; justify-content: space-between;
@@ -85,7 +87,12 @@
         .header p { color: var(--text-secondary); font-size: 0.92rem; margin-top: 4px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; transition: all var(--transition); }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; transition: all var(--transition); animation: statIn 0.5s ease forwards; opacity: 0; transform: translateY(20px); }
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.2s; }
+        @keyframes statIn { to { opacity: 1; transform: translateY(0); } }
         .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
         .stat-card .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 12px; }
         .stat-card .stat-icon.purple { background: var(--primary-bg); color: var(--primary); }
@@ -156,25 +163,25 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon purple"><i class="fas fa-users"></i></div>
-                <div class="stat-value" id="totalUsers">24,856</div>
+                <div class="stat-value" id="statUsers">0</div>
                 <div class="stat-label">总用户数</div>
                 <div class="stat-change up"><i class="fas fa-arrow-up"></i> 12.5% 较上月</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon green"><i class="fas fa-dollar-sign"></i></div>
-                <div class="stat-value" id="totalRevenue">¥128,460</div>
+                <div class="stat-value" id="statRevenue">0</div>
                 <div class="stat-label">总收入</div>
                 <div class="stat-change up"><i class="fas fa-arrow-up"></i> 8.3% 较上月</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-shopping-cart"></i></div>
-                <div class="stat-value" id="totalOrders">3,842</div>
+                <div class="stat-value" id="statOrders">0</div>
                 <div class="stat-label">订单数</div>
                 <div class="stat-change up"><i class="fas fa-arrow-up"></i> 5.7% 较上月</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-                <div class="stat-value" id="avgResponse">1.2s</div>
+                <div class="stat-value" id="statResponse">0</div>
                 <div class="stat-label">平均响应</div>
                 <div class="stat-change down"><i class="fas fa-arrow-down"></i> 0.3s 较上月</div>
             </div>
@@ -253,6 +260,7 @@
     </div>
 
     <script>
+        // ========== 实时时钟 ==========
         function updateClock() {
             const now = new Date();
             document.getElementById('liveTime').innerHTML = `<i class="far fa-clock"></i> ${now.toLocaleString('zh-CN', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}`;
@@ -260,6 +268,31 @@
         updateClock();
         setInterval(updateClock, 1000);
 
+        // ========== 数字滚动动画 ==========
+        function animateNumber(el, target, suffix) {
+            const isDecimal = target.toString().includes('.');
+            const duration = 1000;
+            const start = performance.now();
+            const startVal = 0;
+            function update(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                const val = startVal + (target - startVal) * eased;
+                if (isDecimal) {
+                    el.textContent = val.toFixed(1) + suffix;
+                } else {
+                    el.textContent = Math.floor(val).toLocaleString() + suffix;
+                }
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+        animateNumber(document.getElementById('statUsers'), 24856, '');
+        animateNumber(document.getElementById('statRevenue'), 128460, '');
+        animateNumber(document.getElementById('statOrders'), 3842, '');
+        animateNumber(document.getElementById('statResponse'), 1.2, 's');
+
+        // ========== 主题切换 ==========
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('themeIcon');
@@ -275,6 +308,7 @@
             document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
+        // ========== ECharts ==========
         function getThemeColors() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             return {
@@ -283,8 +317,16 @@
                 bg: 'transparent',
                 primary: '#4B3FE3',
                 heatColors: isDark
-                    ? ['#1A1A30', '#3A2FD6', '#4B3FE3', '#6C63FF', '#8B7FFF', '#B8AFFF']
+                    ? ['#12122A', '#2A2080', '#4B3FE3', '#6C63FF', '#8B7FFF', '#B8AFFF']
                     : ['#FFFFFF', '#D0C8FF', '#8B7FFF', '#6C63FF', '#4B3FE3', '#3A2FD6']
+            };
+        }
+
+        // 种子随机——保证每次刷新热力图一样
+        function seededRandom(seed) {
+            return function() {
+                seed = (seed * 9301 + 49297) % 233280;
+                return seed / 233280;
             };
         }
 
@@ -362,20 +404,21 @@
             const chart = echarts.init(document.getElementById('heatmapChart'));
             const hours = Array.from({length:24}, (_,i) => i + ':00');
             const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+            const rand = seededRandom(42); // 固定种子，每次刷新结果一样
             const data = [];
             for (let d = 0; d < 7; d++) {
                 for (let h = 0; h < 24; h++) {
                     let val;
                     if (d < 5) {
-                        if (h >= 9 && h <= 11) val = Math.floor(Math.random() * 40 + 60);
-                        else if (h >= 14 && h <= 17) val = Math.floor(Math.random() * 30 + 50);
-                        else if (h >= 20 && h <= 22) val = Math.floor(Math.random() * 20 + 30);
-                        else val = Math.floor(Math.random() * 20 + 5);
+                        if (h >= 9 && h <= 11) val = Math.floor(rand() * 40 + 60);
+                        else if (h >= 14 && h <= 17) val = Math.floor(rand() * 30 + 50);
+                        else if (h >= 20 && h <= 22) val = Math.floor(rand() * 20 + 30);
+                        else val = Math.floor(rand() * 20 + 5);
                     } else {
-                        if (h >= 10 && h <= 12) val = Math.floor(Math.random() * 25 + 35);
-                        else if (h >= 15 && h <= 18) val = Math.floor(Math.random() * 30 + 40);
-                        else if (h >= 20 && h <= 23) val = Math.floor(Math.random() * 20 + 25);
-                        else val = Math.floor(Math.random() * 15 + 3);
+                        if (h >= 10 && h <= 12) val = Math.floor(rand() * 25 + 35);
+                        else if (h >= 15 && h <= 18) val = Math.floor(rand() * 30 + 40);
+                        else if (h >= 20 && h <= 23) val = Math.floor(rand() * 20 + 25);
+                        else val = Math.floor(rand() * 15 + 3);
                     }
                     data.push([h, d, val]);
                 }

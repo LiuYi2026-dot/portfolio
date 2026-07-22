@@ -6,7 +6,7 @@
     <title>刘毅的技术博客</title>
     <meta name="description" content="刘毅的技术博客 - 记录AI编程学习、前端开发、接单经验和项目复盘。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -26,7 +26,7 @@
             --max-width: 800px;
             --nav-height: 64px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
         [data-theme="dark"] {
             --bg: #0F0F1A;
@@ -48,7 +48,9 @@
             color: var(--text);
             line-height: 1.7;
             transition: background var(--transition), color var(--transition);
+            animation: pageIn 0.4s ease;
         }
+        @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
         a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
         a:hover { color: var(--primary-light); }
         nav {
@@ -59,7 +61,7 @@
             background: rgba(255,255,255,0.85);
             transition: background var(--transition), border-color var(--transition);
         }
-        [data-theme="dark"] nav { background: rgba(15,15,26,0.85); }
+        [data-theme="dark"] nav { background: rgba(15,15,26,0.9); }
         .nav-inner {
             max-width: 1100px; margin: 0 auto; padding: 0 24px;
             height: 100%; display: flex; align-items: center; justify-content: space-between;
@@ -91,6 +93,7 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
             font-size: 2rem; color: #fff; font-weight: 600;
+            box-shadow: 0 8px 25px rgba(75,63,227,0.25);
         }
         .hero h1 {
             font-size: 2.2rem; font-weight: 700; margin-bottom: 12px;
@@ -105,6 +108,7 @@
         .blog-section, .about-section { max-width: var(--max-width); margin: 0 auto; padding: 0 24px 80px; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
         .section-title i { color: var(--primary); }
+
         .category-tabs { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
         .category-tab {
             padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border);
@@ -113,6 +117,7 @@
         }
         .category-tab:hover { border-color: var(--primary); color: var(--primary); }
         .category-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
         .posts-grid { display: flex; flex-direction: column; gap: 24px; }
         .post-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
@@ -123,7 +128,10 @@
         .post-meta .tag { background: var(--primary-bg); color: var(--primary); padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
         .post-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
         .post-card p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; }
-        .post-card .read-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 0.88rem; font-weight: 500; color: var(--primary); cursor: pointer; }
+        .post-card .read-more {
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+            font-size: 0.88rem; font-weight: 500; color: var(--primary); cursor: pointer;
+        }
         .post-card .read-more i { font-size: 0.75rem; transition: transform var(--transition); }
         .post-card:hover .read-more i { transform: translateX(4px); }
 
@@ -136,18 +144,40 @@
 
         footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
 
+        /* 阅读全文弹窗 */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998;
+            display: flex; align-items: center; justify-content: center; padding: 24px;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--card-bg); border-radius: var(--radius); max-width: 600px; width: 100%;
+            padding: 36px; position: relative; max-height: 80vh; overflow-y: auto;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-content h3 { font-size: 1.4rem; margin-bottom: 12px; }
+        .modal-content .modal-tag { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.78rem; background: var(--primary-bg); color: var(--primary); margin-bottom: 12px; }
+        .modal-content .modal-date { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; display: block; }
+        .modal-content .modal-body { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; background: none; border: none;
+            font-size: 1.3rem; color: var(--text-muted); cursor: pointer; transition: color var(--transition);
+            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-close:hover { color: var(--text); background: var(--primary-bg); }
+
         @media (max-width: 640px) {
             .mobile-menu-btn { display: flex; }
             .nav-links { display: none; }
-            .nav-links.open {
-                display: flex; flex-direction: column; position: absolute; top: var(--nav-height);
-                left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border);
-                padding: 16px 24px; gap: 16px; z-index: 999;
-            }
+            .nav-links.open { display: flex; flex-direction: column; position: absolute; top: var(--nav-height); left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 16px 24px; gap: 16px; z-index: 999; backdrop-filter: blur(12px); }
             .hero h1 { font-size: 1.7rem; }
             .hero-stats { gap: 24px; }
             .post-card { padding: 20px; }
             .about-card { padding: 24px; }
+            .modal-content { padding: 24px; }
         }
     </style>
 </head>
@@ -166,16 +196,18 @@
             </div>
         </div>
     </nav>
+
     <section class="hero">
         <div class="avatar"><i class="fas fa-code"></i></div>
         <h1>用代码解决问题</h1>
         <p>我是刘毅，一名 AI 辅助开发者。从零基础开始，用 AI 工具做出能上线的东西。</p>
         <div class="hero-stats">
-            <span><strong id="postCount">6</strong> 篇文章</span>
+            <span><strong id="postCount">0</strong> 篇文章</span>
             <span><strong>3</strong> 个项目</span>
             <span><strong>2</strong> 个月</span>
         </div>
     </section>
+
     <section class="blog-section" id="posts">
         <h2 class="section-title"><i class="fas fa-pen-fancy"></i> 近期文章</h2>
         <div class="category-tabs">
@@ -187,6 +219,7 @@
         </div>
         <div class="posts-grid" id="postsGrid"></div>
     </section>
+
     <section class="about-section" id="about">
         <div class="about-card">
             <h2><i class="fas fa-user"></i> 关于我</h2>
@@ -194,27 +227,41 @@
             <p>这里记录我的学习笔记、项目复盘和接单经验。希望能给同样在这条路上的朋友一些参考。</p>
             <div class="about-links">
                 <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
-                <a href="https://github.com/LiuYi2026-dot" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
                 <a href="#"><i class="fab fa-weixin"></i> 微信: L-fov-Y-0629</a>
                 <a href="../"><i class="fas fa-briefcase"></i> 作品集</a>
             </div>
         </div>
     </section>
-    <footer><p>&copy; 2026 刘毅 · 用 AI 工具 · 从零开始</p></footer>
+
+    <footer><p>&copy; <span id="year">2026</span> 刘毅 · 用 AI 工具 · 从零开始</p></footer>
+
+    <!-- 阅读全文弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <span class="modal-tag" id="modalTag"></span>
+            <h3 id="modalTitle"></h3>
+            <span class="modal-date" id="modalDate"></span>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
     <script>
         const posts = [
-            { title: '从零开始学前端：我的第一个月总结', desc: '分享我用 AI 辅助学习前端的第一个月经历，包括踩过的坑和学到的东西。', date: '2026-07-20', category: '学习', tag: '入门' },
-            { title: '用 Trae 的 SOLO 模式一天做完待办事项 App', desc: '记录我如何使用 Trae 的 SOLO 模式，从需求到部署完整做完第一个项目的全过程。', date: '2026-07-18', category: 'AI工具', tag: 'Trae' },
-            { title: '大专生接单指南：我在程序员客栈的第一个 800 块', desc: '真实记录从注册程序员客栈到接到第一单、完成交付的全过程，含报价技巧和避坑指南。', date: '2026-07-15', category: '接单', tag: '经验' },
-            { title: 'CSS Grid 布局入门：一篇就够了', desc: '用最通俗的方式讲清楚 Grid 布局的核心概念，看完就能上手写响应式页面。', date: '2026-07-12', category: '前端', tag: 'CSS' },
-            { title: 'AI 编程工具横向对比：Trae vs Cursor vs Claude Code', desc: '亲测三款主流 AI 编程工具，从价格、易用性、生成质量三个维度给出真实评价。', date: '2026-07-08', category: 'AI工具', tag: '对比' },
-            { title: '新手做作品集网站的 5 个建议', desc: '做完第一个作品集网站后总结的实用经验，包括内容排版、部署选型和展示技巧。', date: '2026-07-05', category: '前端', tag: '作品集' }
+            { title: '从零开始学前端：我的第一个月总结', desc: '分享我用 AI 辅助学习前端的第一个月经历，包括踩过的坑和学到的东西。', date: '2026-07-20', category: '学习', tag: '入门', content: '第一个月是最难的。我从完全不懂 HTML 到能用 AI 做出一个完整的页面，这个过程踩了很多坑。这篇文章分享我的真实经历，希望能给你一些参考。<br><br>首先，不要试图一次性学完所有东西。我用 Trae 的 SOLO 模式，每次只学一个小功能：先让 AI 生成代码，然后逐行问它这是什么意思。<br><br>最大的收获是：AI 工具让学习曲线变得非常平缓。不懂就问 AI，它不会嫌你烦。一个月下来，我已经能独立修改和调试大部分前端代码了。' },
+            { title: '用 Trae 的 SOLO 模式一天做完待办事项 App', desc: '记录我如何使用 Trae 的 SOLO 模式，从需求到部署完整做完第一个项目的全过程。', date: '2026-07-18', category: 'AI工具', tag: 'Trae', content: '待办事项App是我做的第一个完整项目。从一个想法到部署上线，只用了一天时间。<br><br>我用 Trae 的 SOLO 模式，直接说需求："帮我做一个待办事项网页应用，要能添加、标记完成、删除任务，数据存浏览器里刷新不丢失"。AI 生成完整代码后，我逐行读懂，然后自己加了一个"编辑"功能。<br><br>这个过程让我意识到：AI 工具能给你一个 80 分的起点，但最后的 20 分要靠你自己去打磨。' },
+            { title: '大专生接单指南：我在程序员客栈的第一个 800 块', desc: '真实记录从注册程序员客栈到接到第一单、完成交付的全过程，含报价技巧和避坑指南。', date: '2026-07-15', category: '接单', tag: '经验', content: '第一次接单是在程序员客栈上，一个企业官网的小项目，800 块钱。<br><br>分享一下我的经验：<br><br>1. 作品集很重要——客户第一个看的就是你有没有拿得出手的作品<br>2. 报价不要太高也不要太低——新手800-1500是比较合理的区间<br>3. 交付前一定要测试——AI 生成的代码可能有隐藏 bug<br>4. 做好需求沟通——需求不明确的项目不要接，后面会非常痛苦' },
+            { title: 'CSS Grid 布局入门：一篇就够了', desc: '用最通俗的方式讲清楚 Grid 布局的核心概念，看完就能上手写响应式页面。', date: '2026-07-12', category: '前端', tag: 'CSS', content: 'CSS Grid 是我最喜欢的前端布局方式。一句话总结：Grid 是二维布局，Flexbox 是一维布局。<br><br>核心概念只有三个：<br><br>1. display: grid — 把容器变成网格<br>2. grid-template-columns — 定义列（用 repeat、fr 单位）<br>3. gap — 间距<br><br>这个项目里的作品集页面就是用 Grid 布局写的。你看 .projects-grid 和 .charts-grid，都是 Grid。' },
+            { title: 'AI 编程工具横向对比：Trae vs Cursor vs Claude Code', desc: '亲测三款主流 AI 编程工具，从价格、易用性、生成质量三个维度给出真实评价。', date: '2026-07-08', category: 'AI工具', tag: '对比', content: '这三款工具我都实际用过一段时间，说下真实感受：<br><br><b>Trae（字节跳动）</b> — 基础版永久免费，国内直连，中文场景最好。适合新手入门。<br><br><b>Cursor</b> — 年订阅约 240 美元，生态最成熟，插件丰富。适合有收入后升级。<br><br><b>Claude Code</b> — 按 API 用量付费，终端 AI Agent 能力最强。适合做复杂工程。<br><br>我的推荐：先用 Trae 起步，赚到钱后再考虑 Cursor 或 Claude Code。' },
+            { title: '新手做作品集网站的 5 个建议', desc: '做完第一个作品集网站后总结的实用经验，包括内容排版、部署选型和展示技巧。', date: '2026-07-05', category: '前端', tag: '作品集', content: '做完作品集网站后，我总结了 5 个最重要的建议：<br><br>1. <b>先上线再完美</b> — 不要等你觉得完美了再部署，先上线，再迭代<br>2. <b>三个项目就够了</b> — 质量比数量重要，3 个扎实的项目好过 10 个半成品<br>3. <b>部署到 GitHub Pages</b> — 免费、稳定、看起来专业<br>4. <b>加上联系方式</b> — 客户能找到你是最重要的<br>5. <b>持续更新</b> — 有新项目就加上去，让作品集保持活力' }
         ];
+
         function renderPosts(category = 'all') {
             const grid = document.getElementById('postsGrid');
             const filtered = category === 'all' ? posts : posts.filter(p => p.category === category);
             grid.innerHTML = filtered.map(p => `
-                <div class="post-card">
+                <div class="post-card" onclick="openModal('${escapeHtml(p.title)}', '${escapeHtml(p.tag)}', '${p.date}', '${p.category}', \`${escapeHtml(p.content)}\`)" data-category="${p.category}">
                     <div class="post-meta"><span><i class="far fa-calendar-alt"></i> ${p.date}</span><span class="tag">${p.tag}</span><span>${p.category}</span></div>
                     <h3>${p.title}</h3>
                     <p>${p.desc}</p>
@@ -223,6 +270,31 @@
             `).join('');
             document.getElementById('postCount').textContent = filtered.length;
         }
+
+        // 弹窗
+        function openModal(title, tag, date, category, contentHtml) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalTag').textContent = tag;
+            document.getElementById('modalDate').textContent = date + ' · ' + category;
+            document.getElementById('modalBody').innerHTML = contentHtml;
+            document.getElementById('modal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('modal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
         document.querySelectorAll('.category-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
@@ -231,6 +303,9 @@
             });
         });
         renderPosts('all');
+
+        // 动态版权
+        document.getElementById('year').textContent = new Date().getFullYear();
 
         function toggleTheme() {
             const html = document.documentElement;

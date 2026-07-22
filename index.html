@@ -9,14 +9,6 @@
     <title>刘毅 · AI辅助开发者 · 可接单</title>
     <meta name="description" content="刘毅 - AI辅助开发者，提供企业官网、数据看板、自动化脚本等Web开发服务。大专毕业自学成才，用AI工具高效交付。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="刘毅 · AI辅助开发者 · 可接单">
-    <meta property="og:description" content="刘毅 - AI辅助开发者，提供企业官网、数据看板、自动化脚本等Web开发服务。用AI工具高效交付。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://liuyi2026-dot.github.io/portfolio/">
-    <meta property="og:image" content="https://liuyi2026-dot.github.io/portfolio/og-image.png">
-    <meta name="twitter:card" content="summary_large_image">
     <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -122,7 +114,7 @@
             -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent; color: transparent;
         }
-        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 500px; margin: 0 auto 24px; }
+        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 560px; margin: 0 auto 24px; line-height: 1.7; }
         .hero-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .hero-tags span {
             padding: 5px 14px; border-radius: 20px; font-size: 0.82rem;
@@ -203,6 +195,11 @@
             margin-bottom: 10px;
         }
         .service-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+        .service-card .service-tag {
+            display: inline-block; font-size: 0.72rem; color: var(--text-muted);
+            border: 1px solid var(--border); border-radius: 4px; padding: 1px 8px;
+            margin-top: 8px;
+        }
 
         /* ====== 接单流程 ====== */
         .process { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
@@ -221,7 +218,20 @@
             font-weight: 700; font-size: 0.9rem;
         }
         .process-step .step-content h4 { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
-        .process-step .step-content p { color: var(--text-secondary); font-size: 0.85rem; }
+        .process-step .step-content p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+        /* ====== 接单渠道 ====== */
+        .platforms { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; text-align: center; }
+        .platforms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+        .platform-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px 16px; text-align: center;
+            transition: all var(--transition);
+        }
+        .platform-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--primary-light); }
+        .platform-card i { font-size: 1.6rem; color: var(--primary); margin-bottom: 8px; }
+        .platform-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .platform-card p { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.5; }
 
         .contact { max-width: 800px; margin: 0 auto; padding: 0 24px 60px; }
         .contact-card {
@@ -229,8 +239,10 @@
             border-radius: var(--radius-lg); padding: 36px; text-align: center;
         }
         .contact-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; }
-        .contact-card p { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 24px; }
-        .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .contact-card .contact-desc { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 8px; line-height: 1.7; }
+        .contact-card .contact-desc small { color: var(--text-muted); font-size: 0.82rem; }
+        .contact-card .contact-divider { width: 40px; height: 2px; background: var(--primary-bg); margin: 12px auto; border-radius: 1px; }
+        .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
         .contact-links a {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 10px 22px; border-radius: 8px; border: 1px solid var(--border);
@@ -252,15 +264,6 @@
 
         footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
 
-        /* 滚动入场动画 */
-        .scroll-reveal {
-            opacity: 0; transform: translateY(24px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .scroll-reveal.visible {
-            opacity: 1; transform: translateY(0);
-        }
-
         .back-top {
             position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px;
             border-radius: 50%; background: var(--primary); color: #fff; border: none;
@@ -273,23 +276,21 @@
 
         @media (max-width: 768px) {
             .services-grid { grid-template-columns: 1fr; }
+            .platforms-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 640px) {
             .mobile-menu-btn { display: flex; }
-            .nav-links {
-                position: absolute; top: var(--nav-height); left: 0; right: 0;
-                background: var(--bg); border-bottom: 1px solid var(--border);
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column; position: absolute; top: var(--nav-height);
+                left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border);
                 padding: 16px 24px; gap: 16px; z-index: 999;
                 backdrop-filter: blur(12px);
-                transform: translateY(-10px); opacity: 0; pointer-events: none;
-                transition: all 0.3s ease; display: flex; flex-direction: column;
-            }
-            .nav-links.open {
-                transform: translateY(0); opacity: 1; pointer-events: auto;
             }
             .nav-links a.active::after { display: none; }
             .nav-links .nav-badge { vertical-align: middle; }
             .hero h1 { font-size: 1.7rem; }
+            .hero p { font-size: 0.92rem; }
             .projects-grid { grid-template-columns: 1fr; }
             .back-top { right: 16px; bottom: 16px; width: 40px; height: 40px; }
             .process-step { padding: 16px; }
@@ -297,8 +298,7 @@
     </style>
 </head>
 <body>
-    <!-- ====== 缓存刷新版本标记 ====== -->
-    <div style="display:none;" id="version" data-build="20260723-01"></div>
+    <div style="display:none;" id="version" data-build="20260723-02"></div>
 
     <nav>
         <div class="nav-inner">
@@ -319,7 +319,7 @@
     <section class="hero">
         <div class="hero-avatar">刘</div>
         <h1>刘毅</h1>
-        <p>AI 辅助开发者 · 从零基础到独立交付 · 用作品说话</p>
+        <p>大专毕业，用 AI 工具自学编程。从第一个 Hello World 到独立做项目、上线接单，走了 2 个月，走了不少弯路。如果你也在这条路上，看看我的作品，你应该能感受到——基础不好也能出活。</p>
         <div class="hero-tags">
             <span>HTML/CSS</span>
             <span>JavaScript</span>
@@ -380,7 +380,6 @@
                 <a href="https://automation-tool-7vmuabsenhago72rpysknc.streamlit.app/" target="_blank" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
                 <span class="project-note">💤 首次打开需10-15秒唤醒</span>
             </div>
-            <!-- 项目5: 图像工坊 -->
             <div class="project-card">
                 <div class="project-icon pink"><i class="fas fa-palette"></i></div>
                 <h3>AI 智能图像工坊</h3>
@@ -392,7 +391,6 @@
                 </div>
                 <a href="image-editor/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <!-- 项目6: 财务小管家 -->
             <div class="project-card">
                 <div class="project-icon teal"><i class="fas fa-wallet"></i></div>
                 <h3>财务小管家</h3>
@@ -408,95 +406,126 @@
     </section>
 
     <!-- ====== 服务 ====== -->
-    <section class="services scroll-reveal" id="services">
+    <section class="services" id="services">
         <h2 class="section-title"><i class="fas fa-briefcase"></i> 可接服务</h2>
-        <p class="section-sub">基于 6 个项目验证的技术栈，提供以下开发服务</p>
+        <p class="section-sub">根据 2026 市场行情报价，AI 提效降低成本，实际成交价视需求复杂度浮动</p>
         <div class="services-grid">
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-globe"></i></div>
                 <h3>企业官网 / 落地页</h3>
-                <span class="service-price">¥800 起</span>
-                <p>响应式企业展示网站、产品落地页、个人名片站。支持多页面导航、表单提交，适配手机和电脑。</p>
+                <span class="service-price">¥800 — ¥2,000</span>
+                <p>响应式官网、产品展示页、个人名片站。市面上类似项目普遍报价 1500-5000 元，我这边走量定价，1-3 天交付，先出 demo 再开发。</p>
+                <span class="service-tag">1-3 天交付</span>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-chart-bar"></i></div>
                 <h3>数据看板 / 报表系统</h3>
-                <span class="service-price">¥1000 起</span>
-                <p>ECharts 可视化仪表盘，折线图、柱状图、饼图、热力图、雷达图。适合运营监控、数据分析、KPI展示场景。</p>
+                <span class="service-price">¥1,000 — ¥3,000</span>
+                <p>ECharts 可视化仪表盘，折线图、柱状图、饼图、热力图、雷达图。适合运营数据监控、KPI 大屏、财务报表展示。</p>
+                <span class="service-tag">3-5 天交付</span>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-file-excel"></i></div>
                 <h3>自动化脚本</h3>
-                <span class="service-price">¥500 起</span>
-                <p>Python 自动化：Excel 批量处理、网页信息抓取、文件整理、报表自动生成。替代重复性手工操作，提升效率。</p>
+                <span class="service-price">¥500 — ¥1,500</span>
+                <p>Python 自动化：Excel 批处理、网页数据抓取、文件整理、报表自动生成。很多公司花 3 天手工干的活，写个脚本 1 分钟搞定。</p>
+                <span class="service-tag">1-3 天交付</span>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-palette"></i></div>
-                <h3>图像编辑 / 处理工具</h3>
-                <span class="service-price">¥800 起</span>
-                <p>在线图像编辑器：滤镜、调色、旋转、裁剪。基于 Canvas 纯前端实现，可用于图片批量处理、证件照制作等。</p>
+                <h3>图像编辑 / 在线工具</h3>
+                <span class="service-price">¥800 — ¥2,000</span>
+                <p>基于 Canvas 的在线图像处理器：滤镜、调色、旋转、裁剪。浏览器端运行，不上传服务器，适合证件照、电商图片处理。</p>
+                <span class="service-tag">2-4 天交付</span>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-wallet"></i></div>
-                <h3>财务管理应用</h3>
-                <span class="service-price">¥800 起</span>
-                <p>个人/企业记账系统：收支记录、分类统计、月度趋势图表、数据本地/云端存储。适合财务管理和数据分析。</p>
+                <h3>财务管理 / 记账应用</h3>
+                <span class="service-price">¥800 — ¥2,500</span>
+                <p>收支管理、分类统计、月度趋势图表。数据本地存储或对接后端，适合个人/小微企业做财务可视化。功能按需定制。</p>
+                <span class="service-tag">2-5 天交付</span>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-cloud-sun"></i></div>
-                <h3>API 应用 / 工具型网站</h3>
-                <span class="service-price">¥600 起</span>
-                <p>天气查询、汇率转换、词典翻译等工具型网站。对接第三方 API，实时数据展示，移动端适配。</p>
+                <h3>API 工具 / 轻应用</h3>
+                <span class="service-price">¥600 — ¥1,500</span>
+                <p>天气查询、汇率换算、词典翻译等工具型网站。对接第三方 API，实时数据展示，适合企业做内部工具或对外服务。</p>
+                <span class="service-tag">1-3 天交付</span>
             </div>
         </div>
     </section>
 
-    <!-- ====== 接单流程 ====== -->
-    <section class="process scroll-reveal" id="process">
+    <!-- ====== 合作流程 ====== -->
+    <section class="process" id="process">
         <h2 class="section-title"><i class="fas fa-list-ol"></i> 合作流程</h2>
-        <p class="section-sub">简单四步，快速交付</p>
+        <p class="section-sub">简单透明，不做免费方案<br><small style="color:var(--text-muted);font-size:0.82rem;">参考行业内独立开发者的通用流程</small></p>
         <div class="process-steps">
             <div class="process-step">
                 <div class="step-num">1</div>
                 <div class="step-content">
                     <h4>沟通需求</h4>
-                    <p>告诉我你想要什么——做什么类型的项目？需要哪些功能？有没有参考案例？越详细越好。</p>
+                    <p>微信或邮件告诉我你要做什么。参考案例、功能清单、预期效果越具体越好。我不收咨询费，聊清楚再报价。</p>
                 </div>
             </div>
             <div class="process-step">
                 <div class="step-num">2</div>
                 <div class="step-content">
-                    <h4>报价 &amp; 付定金</h4>
-                    <p>我会根据需求给出明确报价和交付时间。确认后支付 30%-50% 定金，我开始开发。</p>
+                    <h4>报价 &amp; 定金</h4>
+                    <p>根据需求给出固定报价和预计交付时间。确认后预付 30%-50% 定金，我启动开发。平台项目走平台资金托管，私单走微信转账。</p>
                 </div>
             </div>
             <div class="process-step">
                 <div class="step-num">3</div>
                 <div class="step-content">
-                    <h4>开发 &amp; 测试</h4>
-                    <p>用 AI 工具快速生成代码，逐行调试优化。开发过程中保持沟通，随时确认进度和效果。</p>
+                    <h4>开发 &amp; 同步</h4>
+                    <p>我用 AI 工具辅助写代码，逐行检查测试。开发期间保持沟通，阶段性给你看效果，及时调整，避免做偏方向。</p>
                 </div>
             </div>
             <div class="process-step">
                 <div class="step-num">4</div>
                 <div class="step-content">
                     <h4>交付 &amp; 尾款</h4>
-                    <p>完成开发后展示效果，确认没问题后支付尾款，交付完整源码或部署上线。</p>
+                    <p>完成开发后线上展示确认，没问题结清尾款，交付完整源码（或部署上线）。后续小修改免费，大改动另议。</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ====== 接单渠道 ====== -->
+    <section class="platforms" id="platforms">
+        <h2 class="section-title" style="justify-content:center;"><i class="fas fa-bullhorn"></i> 在哪可以找到我</h2>
+        <p class="section-sub">以下渠道都有我的作品和联系方式</p>
+        <div class="platforms-grid">
+            <div class="platform-card">
+                <i class="fab fa-weixin"></i>
+                <h4>微信直聊</h4>
+                <p>最快的方式。加好友备注"接单"，我看到就回。<br><strong style="color:var(--primary);">L-fov-Y-0629</strong></p>
+            </div>
+            <div class="platform-card">
+                <i class="fas fa-laptop-code"></i>
+                <h4>程序员客栈</h4>
+                <p>注册中，平台派单制，资金托管安全。适合远程开发合作。搜索"刘毅"可看到我的作品集。</p>
+            </div>
+            <div class="platform-card">
+                <i class="fas fa-store"></i>
+                <h4>闲鱼 / 小红书</h4>
+                <p>搜索"网页制作""Python脚本"，我会不定期发布案例。适合小单快速合作，积累信用。</p>
+            </div>
+        </div>
+    </section>
+
     <!-- ====== 联系 ====== -->
-    <section class="contact scroll-reveal" id="contact">
+    <section class="contact" id="contact">
         <div class="contact-card">
             <h2><i class="fas fa-handshake"></i> 联系我</h2>
-            <p>有项目需求？加微信直接聊，24小时内回复。先沟通需求，免费评估。</p>
+            <p class="contact-desc">项目小到 500 元的脚本，大到 3000 元的看板，我都接。</p>
+            <div class="contact-divider"></div>
+            <p class="contact-desc">直接加微信聊需求，不收咨询费。<br><small>一般 24 小时内回复，急单注明"加急"。</small></p>
             <div class="contact-links">
                 <a href="#" onclick="copyWechat();return false;"><i class="fab fa-weixin"></i> 复制微信号</a>
                 <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
                 <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#" onclick="alert('微信: L-fov-Y-0629\n加好友请备注「接单」')" class="contact-cta"><i class="fas fa-shopping-bag"></i> 立刻询价</a>
+                <a href="#" onclick="alert('微信: L-fov-Y-0629\n加好友请备注「接单」\n\n报价范围参考：\n企业官网 ¥800-2000\n数据看板 ¥1000-3000\n自动化脚本 ¥500-1500\n图像工具 ¥800-2000\n记账应用 ¥800-2500\nAPI工具 ¥600-1500\n\n最终价格视具体需求协商')" class="contact-cta"><i class="fas fa-shopping-bag"></i> 立即询价</a>
             </div>
         </div>
     </section>
@@ -509,9 +538,9 @@
     <div class="copy-toast" id="copyToast"></div>
 
     <script>
-        // ===== CDN缓存强制刷新 =====
+        // ===== CDN缓存版本管理 =====
         (function() {
-            var v = '20260723-01';
+            var v = '20260723-02';
             var last = localStorage.getItem('portfolio_version');
             if (last && last !== v) {
                 localStorage.setItem('portfolio_version', v);
@@ -592,17 +621,6 @@
                 closeMenu();
             }
         });
-
-        // ===== 滚动入场动画 =====
-        var revealObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.scroll-reveal').forEach(function(el) { revealObserver.observe(el); });
     </script>
 </body>
 </html>

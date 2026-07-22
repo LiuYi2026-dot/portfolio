@@ -137,9 +137,10 @@
             opacity: 0; transform: translateY(30px);
             animation: cardIn 0.6s ease forwards;
         }
-        .project-card:nth-child(1) { animation-delay: 0.1s; }
-        .project-card:nth-child(2) { animation-delay: 0.2s; }
-        .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .project-card:nth-child(1) { animation-delay: 0.08s; }
+.project-card:nth-child(2) { animation-delay: 0.16s; }
+.project-card:nth-child(3) { animation-delay: 0.24s; }
+.project-card:nth-child(4) { animation-delay: 0.32s; }
         @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
         .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--primary-light); }
         .project-icon {
@@ -150,6 +151,8 @@
         .project-icon.purple { background: var(--primary-bg); color: var(--primary); }
         .project-icon.green { background: rgba(16,185,129,0.1); color: #10B981; }
         .project-icon.blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
+.project-icon.orange { background: rgba(245,158,11,0.1); color: #F59E0B; }
+.project-icon.red { background: rgba(239,68,68,0.1); color: #EF4444; }
         .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
         .project-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
         .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -248,7 +251,7 @@
 
     <section class="projects" id="projects">
         <h2 class="section-title"><i class="fas fa-folder-open"></i> 我的项目</h2>
-        <p class="section-sub">用 AI 工具辅助开发的 3 个作品，全部已上线可访问。</p>
+        <p class="section-sub">用 AI 工具辅助开发的 4 个项目，全部已上线可访问。</p>
         <div class="projects-grid">
             <div class="project-card">
                 <div class="project-icon purple"><i class="fas fa-check-double"></i></div>
@@ -282,6 +285,19 @@
                     <span>实时时钟</span>
                 </div>
                 <a href="dashboard/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <!-- 项目4: 自动化工具 -->
+            <div class="project-card">
+                <div class="project-icon orange"><i class="fas fa-robot"></i></div>
+                <h3>AI 自动化工具</h3>
+                <p>Python + Streamlit 构建的在线工具。支持网页信息抓取（标题/链接/表格/正文）和 Excel 数据处理（清洗/统计/可视化/导出）。</p>
+                <div class="project-tags">
+                    <span>Python</span>
+                    <span>Streamlit</span>
+                    <span>BeautifulSoup</span>
+                    <span>Pandas</span>
+                </div>
+                <a href="https://liuyi2026-automation.streamlit.app" target="_blank" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </section>

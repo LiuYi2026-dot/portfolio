@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘毅 · 作品集</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4B3FE3;
+            --primary-light: #6C63FF;
+            --primary-bg: rgba(75, 63, 227, 0.08);
+            --bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --text: #1A1A2E;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --nav-height: 64px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        [data-theme="dark"] {
+            --bg: #0F0F1A;
+            --card-bg: #1E1E36;
+            --text: #EEEEF0;
+            --text-secondary: #B0B0C0;
+            --text-muted: #6B7280;
+            --border: #2D2D4A;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+            --primary-bg: rgba(75, 63, 227, 0.15);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
+        }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { color: var(--primary-light); }
+
+        /* 导航 */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-height); z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.85);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        [data-theme="dark"] nav { background: rgba(15,15,26,0.85); }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            height: 100%; display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo { font-size: 1.2rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .nav-logo i { color: var(--primary); }
+        .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; transition: color var(--transition); }
+        .nav-links a:hover { color: var(--primary); }
+        .theme-toggle {
+            background: none; border: 1px solid var(--border); border-radius: 8px;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-secondary); transition: all var(--transition);
+        }
+        .theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            padding: 120px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto;
+        }
+        .hero-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: #fff; font-weight: 600;
+        }
+        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 500px; margin: 0 auto 24px; }
+        .hero-tags { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .hero-tags span {
+            padding: 5px 14px; border-radius: 20px; font-size: 0.82rem;
+            background: var(--primary-bg); color: var(--primary); font-weight: 500;
+        }
+
+        /* 项目 */
+        .projects { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title i { color: var(--primary); }
+        .section-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        .project-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 28px; transition: all var(--transition);
+        }
+        .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--primary-light); }
+        .project-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: 16px;
+        }
+        .project-icon.purple { background: var(--primary-bg); color: var(--primary); }
+        .project-icon.green { background: rgba(16,185,129,0.1); color: #10B981; }
+        .project-icon.blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
+        .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+        .project-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
+        .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .project-tags span {
+            padding: 2px 10px; border-radius: 4px; font-size: 0.75rem;
+            background: var(--primary-bg); color: var(--primary);
+        }
+        .project-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85rem; font-weight: 600; color: var(--primary);
+        }
+        .project-link i { transition: transform var(--transition); }
+        .project-card:hover .project-link i { transform: translateX(4px); }
+
+        /* 联系 */
+        .contact { max-width: 800px; margin: 0 auto; padding: 0 24px 60px; }
+        .contact-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 36px; text-align: center;
+        }
+        .contact-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; }
+        .contact-card p { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 24px; }
+        .contact-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .contact-links a {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 22px; border-radius: 8px; border: 1px solid var(--border);
+            color: var(--text-secondary); font-size: 0.88rem; transition: all var(--transition);
+        }
+        .contact-links a:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
+
+        /* 页脚 */
+        footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.7rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo"><i class="fas fa-code"></i> 刘毅</a>
+            <ul class="nav-links">
+                <li><a href="#projects">项目</a></li>
+                <li><a href="blog/">博客</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-avatar">刘</div>
+        <h1>刘毅</h1>
+        <p>AI 辅助开发者 · 从零基础到独立交付 · 用作品说话</p>
+        <div class="hero-tags">
+            <span>HTML/CSS</span>
+            <span>JavaScript</span>
+            <span>ECharts</span>
+            <span>Trae AI</span>
+            <span>GitHub Pages</span>
+        </div>
+    </section>
+
+    <section class="projects" id="projects">
+        <h2 class="section-title"><i class="fas fa-folder-open"></i> 我的项目</h2>
+        <p class="section-sub">用 AI 工具辅助开发的 3 个作品，全部已上线可访问。</p>
+        <div class="projects-grid">
+            <!-- 项目1: 待办事项 -->
+            <div class="project-card">
+                <div class="project-icon purple"><i class="fas fa-check-double"></i></div>
+                <h3>待办事项 App</h3>
+                <p>一个功能完整的待办事项网页应用。支持添加任务、标记完成、删除任务，数据保存在浏览器中刷新不丢失。</p>
+                <div class="project-tags">
+                    <span>JavaScript</span>
+                    <span>LocalStorage</span>
+                    <span>响应式</span>
+                </div>
+                <a href="todo/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <!-- 项目2: 博客 -->
+            <div class="project-card">
+                <div class="project-icon green"><i class="fas fa-pen-fancy"></i></div>
+                <h3>个人技术博客</h3>
+                <p>记录学习过程和接单经验的博客网站。支持文章分类筛选、暗黑模式切换，响应式适配手机和电脑。</p>
+                <div class="project-tags">
+                    <span>HTML/CSS</span>
+                    <span>JS动态渲染</span>
+                    <span>暗黑模式</span>
+                </div>
+                <a href="blog/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <!-- 项目3: 数据看板 -->
+            <div class="project-card">
+                <div class="project-icon blue"><i class="fas fa-chart-line"></i></div>
+                <h3>数据可视化看板</h3>
+                <p>使用 ECharts 构建的数据仪表盘，包含折线图、饼图、柱状图、雷达图、热力图五种图表类型。</p>
+                <div class="project-tags">
+                    <span>ECharts</span>
+                    <span>数据可视化</span>
+                    <span>实时时钟</span>
+                </div>
+                <a href="dashboard/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-card">
+            <h2><i class="fas fa-handshake"></i> 联系我</h2>
+            <p>有项目需求或合作意向？欢迎通过以下方式联系我，价格优惠、交付靠谱。</p>
+            <div class="contact-links">
+                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 3622117675@qq.com</a>
+                <a href="https://github.com/LiuYi2026-dot" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fab fa-weixin"></i> L-fov-Y-0629</a>
+                <a href="#"><i class="fas fa-shopping-bag"></i> 可接单</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 刘毅 · 用 AI 工具 · 从零开始 · <a href="https://github.com/LiuYi2026-dot" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘毅的技术博客</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4B3FE3;
+            --primary-light: #6C63FF;
+            --primary-dark: #3A2FD6;
+            --primary-bg: rgba(75, 63, 227, 0.08);
+            --bg: #FFFFFF;
+            --bg-secondary: #F5F5FA;
+            --card-bg: #FFFFFF;
+            --text: #1A1A2E;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --max-width: 800px;
+            --nav-height: 64px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        [data-theme="dark"] {
+            --bg: #0F0F1A;
+            --bg-secondary: #1A1A2E;
+            --card-bg: #1E1E36;
+            --text: #EEEEF0;
+            --text-secondary: #B0B0C0;
+            --text-muted: #6B7280;
+            --border: #2D2D4A;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+            --primary-bg: rgba(75, 63, 227, 0.15);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            transition: background var(--transition), color var(--transition);
+            overflow-x: hidden;
+        }
+        a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
+        a:hover { color: var(--primary-light); }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-height);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.85);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        [data-theme="dark"] nav { background: rgba(15,15,26,0.85); }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto; padding: 0 24px;
+            height: 100%; display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo { font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .nav-logo i { color: var(--primary); font-size: 1.4rem; }
+        .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; transition: color var(--transition); }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .theme-toggle {
+            background: none; border: 1px solid var(--border); border-radius: 8px;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-secondary); font-size: 1rem; transition: all var(--transition);
+        }
+        .theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+        .hero {
+            padding: 120px 24px 60px; text-align: center; max-width: var(--max-width); margin: 0 auto;
+        }
+        .hero .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: #fff; font-weight: 600;
+        }
+        .hero h1 {
+            font-size: 2.2rem; font-weight: 700; margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 560px; margin: 0 auto 24px; }
+        .hero-stats { display: flex; justify-content: center; gap: 40px; }
+        .hero-stats span { font-size: 0.9rem; color: var(--text-muted); }
+        .hero-stats strong { display: block; font-size: 1.3rem; color: var(--text); font-weight: 700; }
+        .blog-section { max-width: var(--max-width); margin: 0 auto; padding: 0 24px 80px; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--primary); font-size: 1.3rem; }
+        .category-tabs { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
+        .category-tab {
+            padding: 6px 18px; border-radius: 20px; border: 1px solid var(--border);
+            background: transparent; color: var(--text-secondary); font-size: 0.85rem;
+            cursor: pointer; transition: all var(--transition); font-family: var(--font-sans);
+        }
+        .category-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .category-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .posts-grid { display: flex; flex-direction: column; gap: 24px; }
+        .post-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 28px; transition: all var(--transition); cursor: pointer;
+        }
+        .post-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--primary-light); }
+        .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 0.82rem; color: var(--text-muted); }
+        .post-meta .tag { background: var(--primary-bg); color: var(--primary); padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .post-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+        .post-card p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .post-card .read-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 0.88rem; font-weight: 500; color: var(--primary); }
+        .post-card .read-more i { font-size: 0.75rem; transition: transform var(--transition); }
+        .post-card:hover .read-more i { transform: translateX(4px); }
+        .about-section { max-width: var(--max-width); margin: 0 auto; padding: 0 24px 80px; }
+        .about-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; }
+        .about-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; }
+        .about-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; margin-bottom: 20px; }
+        .about-links { display: flex; gap: 14px; flex-wrap: wrap; }
+        .about-links a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-secondary); font-size: 0.88rem; transition: all var(--transition); }
+        .about-links a:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
+        footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.7rem; }
+            .hero-stats { gap: 24px; }
+            .post-card { padding: 20px; }
+            .about-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="../" class="nav-logo"><i class="fas fa-terminal"></i> 刘毅的博客</a>
+            <ul class="nav-links">
+                <li><a href="#posts" class="active">文章</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="../"><i class="fas fa-briefcase"></i> 作品集</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+    <section class="hero">
+        <div class="avatar"><i class="fas fa-code"></i></div>
+        <h1>用代码解决问题</h1>
+        <p>我是刘毅，一名 AI 辅助开发者。从零基础开始，用 AI 工具做出能上线的东西。</p>
+        <div class="hero-stats">
+            <span><strong id="postCount">6</strong> 篇文章</span>
+            <span><strong>3</strong> 个项目</span>
+            <span><strong>2</strong> 个月</span>
+        </div>
+    </section>
+    <section class="blog-section" id="posts">
+        <h2 class="section-title"><i class="fas fa-pen-fancy"></i> 近期文章</h2>
+        <div class="category-tabs">
+            <button class="category-tab active" data-cat="all">全部</button>
+            <button class="category-tab" data-cat="前端">前端</button>
+            <button class="category-tab" data-cat="AI工具">AI工具</button>
+            <button class="category-tab" data-cat="接单">接单</button>
+            <button class="category-tab" data-cat="学习">学习</button>
+        </div>
+        <div class="posts-grid" id="postsGrid"></div>
+    </section>
+    <section class="about-section" id="about">
+        <div class="about-card">
+            <h2><i class="fas fa-user"></i> 关于我</h2>
+            <p>我是刘毅，一名大专毕业生。2026年开始用 AI 工具辅助编程，从零基础到能独立开发 Web 应用。我相信在这个时代，动手能力比文凭更重要。</p>
+            <p>这里记录我的学习笔记、项目复盘和接单经验。希望能给同样在这条路上的朋友一些参考。</p>
+            <div class="about-links">
+                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
+                <a href="https://github.com/LiuYi2026-dot" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fab fa-weixin"></i> 微信: L-fov-Y-0629</a>
+                <a href="../"><i class="fas fa-briefcase"></i> 作品集</a>
+            </div>
+        </div>
+    </section>
+    <footer><p>&copy; 2026 刘毅 · 用 AI 工具 · 从零开始</p></footer>
+    <script>
+        const posts = [
+            { title: '从零开始学前端：我的第一个月总结', desc: '分享我用 AI 辅助学习前端的第一个月经历，包括踩过的坑和学到的东西。', date: '2026-07-20', category: '学习', tag: '入门' },
+            { title: '用 Trae 的 SOLO 模式一天做完待办事项 App', desc: '记录我如何使用 Trae 的 SOLO 模式，从需求到部署完整做完第一个项目的全过程。', date: '2026-07-18', category: 'AI工具', tag: 'Trae' },
+            { title: '大专生接单指南：我在程序员客栈的第一个 800 块', desc: '真实记录从注册程序员客栈到接到第一单、完成交付的全过程，含报价技巧和避坑指南。', date: '2026-07-15', category: '接单', tag: '经验' },
+            { title: 'CSS Grid 布局入门：一篇就够了', desc: '用最通俗的方式讲清楚 Grid 布局的核心概念，看完就能上手写响应式页面。', date: '2026-07-12', category: '前端', tag: 'CSS' },
+            { title: 'AI 编程工具横向对比：Trae vs Cursor vs Claude Code', desc: '亲测三款主流 AI 编程工具，从价格、易用性、生成质量三个维度给出真实评价。', date: '2026-07-08', category: 'AI工具', tag: '对比' },
+            { title: '新手做作品集网站的 5 个建议', desc: '做完第一个作品集网站后总结的实用经验，包括内容排版、部署选型和展示技巧。', date: '2026-07-05', category: '前端', tag: '作品集' }
+        ];
+        function renderPosts(category = 'all') {
+            const grid = document.getElementById('postsGrid');
+            const filtered = category === 'all' ? posts : posts.filter(p => p.category === category);
+            grid.innerHTML = filtered.map(p => `
+                <div class="post-card">
+                    <div class="post-meta"><span><i class="far fa-calendar-alt"></i> ${p.date}</span><span class="tag">${p.tag}</span><span>${p.category}</span></div>
+                    <h3>${p.title}</h3>
+                    <p>${p.desc}</p>
+                    <span class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></span>
+                </div>
+            `).join('');
+            document.getElementById('postCount').textContent = filtered.length;
+        }
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                renderPosts(this.dataset.cat);
+            });
+        });
+        renderPosts('all');
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    </script>
+</body>
+</html>

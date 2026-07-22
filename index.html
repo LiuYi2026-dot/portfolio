@@ -137,10 +137,12 @@
             opacity: 0; transform: translateY(30px);
             animation: cardIn 0.6s ease forwards;
         }
-        .project-card:nth-child(1) { animation-delay: 0.08s; }
-        .project-card:nth-child(2) { animation-delay: 0.16s; }
-        .project-card:nth-child(3) { animation-delay: 0.24s; }
-        .project-card:nth-child(4) { animation-delay: 0.32s; }
+        .project-card:nth-child(1) { animation-delay: 0.07s; }
+        .project-card:nth-child(2) { animation-delay: 0.14s; }
+        .project-card:nth-child(3) { animation-delay: 0.21s; }
+        .project-card:nth-child(4) { animation-delay: 0.28s; }
+        .project-card:nth-child(5) { animation-delay: 0.35s; }
+        .project-card:nth-child(6) { animation-delay: 0.42s; }
         @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
         .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--primary-light); }
         .project-icon {
@@ -152,7 +154,8 @@
         .project-icon.green { background: rgba(16,185,129,0.1); color: #10B981; }
         .project-icon.blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
         .project-icon.orange { background: rgba(245,158,11,0.1); color: #F59E0B; }
-        .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+        .project-icon.pink { background: rgba(232,93,74,0.1); color: #E85D4A; }
+        .project-icon.teal { background: rgba(0,206,201,0.1); color: #00CEC9; }
         .project-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; }
         .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
         .project-tags span {
@@ -308,7 +311,7 @@
     <!-- ====== 项目 ====== -->
     <section class="projects" id="projects">
         <h2 class="section-title"><i class="fas fa-folder-open"></i> 我的项目</h2>
-        <p class="section-sub">用 AI 工具辅助开发的 4 个项目，全部可在线预览。</p>
+        <p class="section-sub">用 AI 工具辅助开发的 6 个项目，全部可在线预览。</p>
         <div class="projects-grid">
             <div class="project-card">
                 <div class="project-icon purple"><i class="fas fa-check-double"></i></div>
@@ -354,7 +357,31 @@
                     <span>Pandas</span>
                 </div>
                 <a href="https://automation-tool-7vmuabsenhago72rpysknc.streamlit.app/" target="_blank" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
-                <span class="project-note">💤 首次打开可能需要 10-15 秒唤醒</span>
+                <span class="project-note">💤 首次打开需10-15秒唤醒</span>
+            </div>
+            <!-- 项目5: 图像工坊 -->
+            <div class="project-card">
+                <div class="project-icon pink"><i class="fas fa-palette"></i></div>
+                <h3>AI 智能图像工坊</h3>
+                <p>在线图像编辑工具。支持6种滤镜、亮度/对比度/饱和度/模糊调色，Canvas实时预览，浏览器本地处理不上传服务器。</p>
+                <div class="project-tags">
+                    <span>Canvas</span>
+                    <span>滤镜算法</span>
+                    <span>调色</span>
+                </div>
+                <a href="image-editor/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <!-- 项目6: 财务小管家 -->
+            <div class="project-card">
+                <div class="project-icon teal"><i class="fas fa-wallet"></i></div>
+                <h3>财务小管家</h3>
+                <p>个人记账本应用。记录收支、分类统计、月度趋势图表、每日支出分布图，数据本地存储安全可靠，支持增删记录。</p>
+                <div class="project-tags">
+                    <span>JavaScript</span>
+                    <span>数据可视化</span>
+                    <span>LocalStorage</span>
+                </div>
+                <a href="finance/" class="project-link">在线体验 <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </section>

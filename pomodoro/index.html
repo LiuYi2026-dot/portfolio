@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注番茄钟 · 刘毅</title>
+    <meta name="description" content="精美的番茄钟专注计时器 - 支持番茄/短休/长休模式切换、任务管理、白噪音、统计追踪。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
+    <link href="https://fonts.loli.net/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #E85D4A; --primary-light: #FF6B5A; --primary-bg: rgba(232,93,74,0.1);
+            --focus: #4A90D9; --focus-bg: rgba(74,144,217,0.1);
+            --bg: #FFF8F5; --card: #FFFFFF; --text: #2D1B14; --text-secondary: #8B7B72;
+            --text-muted: #C4B5AB; --border: #F0E6DF; --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.1); --radius: 16px; --radius-lg: 28px;
+            --nav-height: 64px; --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --font: 'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+        }
+        [data-theme="dark"] {
+            --bg: #1A1210; --card: #2A1E1A; --text: #F0E6DF; --text-secondary: #B5A398;
+            --text-muted: #7A6A60; --border: #3A2A24; --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.4); --primary-bg: rgba(232,93,74,0.2);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;transition:background var(--transition),color var(--transition);animation:pageIn .4s ease}
+        @keyframes pageIn{0%{opacity:0}100%{opacity:1}}
+        
+        nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);z-index:1000;border-bottom:1px solid var(--border);backdrop-filter:blur(16px);background:rgba(255,255,255,0.8);transition:background var(--transition),border-color var(--transition)}
+        [data-theme="dark"] nav{background:rgba(26,18,16,0.9)}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.15rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;text-decoration:none}
+        .nav-logo i{color:var(--primary)}
+        .nav-actions{display:flex;gap:8px;align-items:center}
+        .btn-icon{background:none;border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all var(--transition);font-size:0.95rem;text-decoration:none}
+        .btn-icon:hover{border-color:var(--primary);color:var(--primary)}
+        
+        .app{padding-top:calc(var(--nav-height) + 30px);max-width:600px;margin:0 auto;padding-left:20px;padding-right:20px;padding-bottom:40px;text-align:center}
+        
+        /* 番茄统计 */
+        .stats-bar{display:flex;justify-content:center;gap:30px;margin-bottom:28px;padding:16px 24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+        .stat-item{text-align:center}
+        .stat-item .stat-num{font-size:1.3rem;font-weight:700;color:var(--primary)}
+        .stat-item .stat-label{font-size:0.75rem;color:var(--text-muted);margin-top:2px}
+        
+        /* 模式切换 */
+        .mode-tabs{display:flex;gap:6px;background:var(--card);padding:5px;border-radius:14px;border:1px solid var(--border);margin-bottom:32px;display:inline-flex;box-shadow:var(--shadow)}
+        .mode-tab{padding:8px 22px;border-radius:10px;border:none;background:transparent;color:var(--text-secondary);font-size:0.88rem;font-weight:500;cursor:pointer;transition:all var(--transition);font-family:var(--font)}
+        .mode-tab:hover{color:var(--text)}
+        .mode-tab.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px rgba(232,93,74,0.3)}
+        .mode-tab.active-break{background:var(--focus);color:#fff;box-shadow:0 4px 12px rgba(74,144,217,0.3)}
+        
+        /* 计时器 */
+        .timer-wrap{position:relative;margin:0 auto 28px;width:280px;height:280px}
+        .timer-svg{transform:rotate(-90deg)}
+        .timer-bg{fill:none;stroke:var(--border);stroke-width:6}
+        .timer-progress{fill:none;stroke:var(--primary);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .3s ease}
+        .timer-progress.break-mode{stroke:var(--focus)}
+        .timer-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+        .timer-display{font-size:3.5rem;font-weight:700;letter-spacing:2px;font-variant-numeric:tabular-nums;margin-bottom:4px}
+        .timer-label{font-size:0.85rem;color:var(--text-muted)}
+        
+        /* 控制按钮 */
+        .controls{display:flex;justify-content:center;gap:14px;margin-bottom:32px}
+        .ctrl-btn{width:56px;height:56px;border-radius:50%;border:none;font-size:1.3rem;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center}
+        .ctrl-btn.primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(232,93,74,0.3)}
+        .ctrl-btn.primary:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(232,93,74,0.4)}
+        .ctrl-btn.secondary{background:var(--card);color:var(--text-secondary);border:1px solid var(--border)}
+        .ctrl-btn.secondary:hover{border-color:var(--primary);color:var(--primary)}
+        
+        /* 任务列表 */
+        .task-section{text-align:left;margin-top:8px}
+        .task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+        .task-header h3{font-size:1rem;font-weight:600}
+        .task-header button{background:none;border:none;color:var(--primary);font-size:0.85rem;cursor:pointer;font-family:var(--font)}
+        .task-input-wrap{display:flex;gap:8px;margin-bottom:14px}
+        .task-input-wrap input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-size:0.88rem;background:var(--card);color:var(--text);outline:none;font-family:var(--font);transition:border-color var(--transition)}
+        .task-input-wrap input:focus{border-color:var(--primary)}
+        .task-input-wrap button{padding:10px 16px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:0.85rem;cursor:pointer;font-weight:600;font-family:var(--font)}
+        .task-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+        .task-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:all var(--transition)}
+        .task-item:hover{border-color:var(--primary-light)}
+        .task-item.done .task-text{text-decoration:line-through;color:var(--text-muted)}
+        .task-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--transition)}
+        .task-check.checked{background:var(--primary);border-color:var(--primary);color:#fff;font-size:0.6rem}
+        .task-text{flex:1;font-size:0.88rem}
+        .task-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;padding:4px;opacity:0;transition:opacity var(--transition)}
+        .task-item:hover .task-del{opacity:1}
+        .task-del:hover{color:#EF4444}
+        
+        .empty-note{padding:40px;color:var(--text-muted);font-size:0.88rem}
+        
+        /* 白噪音 */
+        .sound-section{margin-top:20px}
+        .sound-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+        .sound-btn{padding:10px 6px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text-secondary);font-size:0.78rem;cursor:pointer;transition:all var(--transition);font-family:var(--font)}
+        .sound-btn:hover{border-color:var(--primary);color:var(--primary)}
+        .sound-btn.active{background:var(--primary-bg);border-color:var(--primary);color:var(--primary)}
+        .sound-btn i{display:block;font-size:1.2rem;margin-bottom:4px}
+        
+        footer{text-align:center;padding:24px;color:var(--text-muted);font-size:0.82rem;margin-top:20px}
+        
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 24px;border-radius:10px;font-size:0.85rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:9999;white-space:nowrap}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+        
+        @media(max-width:520px){
+            .timer-wrap{width:220px;height:220px}
+            .timer-display{font-size:2.8rem}
+            .stats-bar{gap:16px;padding:12px 16px}
+            .sound-grid{grid-template-columns:repeat(2,1fr)}
+            .task-del{opacity:1}
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="../" class="nav-logo"><i class="fas fa-clock"></i> 专注番茄钟</a>
+            <div class="nav-actions">
+                <button class="btn-icon" onclick="toggleTheme()" id="themeBtn" aria-label="切换主题"><i class="fas fa-moon"></i></button>
+                <a href="../" class="btn-icon" title="返回作品集"><i class="fas fa-home"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app">
+        <!-- 统计 -->
+        <div class="stats-bar">
+            <div class="stat-item"><div class="stat-num" id="todayCount">0</div><div class="stat-label">今日番茄</div></div>
+            <div class="stat-item"><div class="stat-num" id="totalCount">0</div><div class="stat-label">累计番茄</div></div>
+            <div class="stat-item"><div class="stat-num" id="focusMin">0</div><div class="stat-label">专注分钟</div></div>
+        </div>
+
+        <!-- 模式 -->
+        <div class="mode-tabs" id="modeTabs">
+            <button class="mode-tab active" data-mode="pomodoro" onclick="switchMode('pomodoro')">🍅 番茄</button>
+            <button class="mode-tab" data-mode="short" onclick="switchMode('short')">☕ 短休</button>
+            <button class="mode-tab" data-mode="long" onclick="switchMode('long')">🌿 长休</button>
+        </div>
+
+        <!-- 计时器 -->
+        <div class="timer-wrap">
+            <svg class="timer-svg" width="280" height="280" viewBox="0 0 280 280">
+                <circle class="timer-bg" cx="140" cy="140" r="125"/>
+                <circle class="timer-progress" id="timerCircle" cx="140" cy="140" r="125"
+                    stroke-dasharray="785.4" stroke-dashoffset="0"/>
+            </svg>
+            <div class="timer-center">
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-label" id="timerLabel">点击开始</div>
+            </div>
+        </div>
+
+        <!-- 控制 -->
+        <div class="controls">
+            <button class="ctrl-btn secondary" onclick="resetTimer()" title="重置"><i class="fas fa-undo-alt"></i></button>
+            <button class="ctrl-btn primary" id="mainBtn" onclick="toggleTimer()" title="开始"><i class="fas fa-play"></i></button>
+            <button class="ctrl-btn secondary" onclick="skipSession()" title="跳过"><i class="fas fa-forward"></i></button>
+        </div>
+
+        <!-- 任务 -->
+        <div class="task-section">
+            <div class="task-header">
+                <h3><i class="fas fa-tasks"></i> 待办任务</h3>
+                <button onclick="showAddTask()">+ 添加任务</button>
+            </div>
+            <div class="task-input-wrap" id="taskInputWrap" style="display:none">
+                <input type="text" id="taskInput" placeholder="输入任务名称..." onkeydown="if(event.key==='Enter')addTask()">
+                <button onclick="addTask()">添加</button>
+            </div>
+            <ul class="task-list" id="taskList">
+                <div class="empty-note">还没有任务，添加一个待办事项开始专注吧</div>
+            </ul>
+        </div>
+
+        <!-- 白噪音 -->
+        <div class="sound-section">
+            <div class="task-header"><h3><i class="fas fa-headphones"></i> 白噪音</h3></div>
+            <div class="sound-grid">
+                <button class="sound-btn" data-sound="none" onclick="selectSound('none',this)"><i class="fas fa-ban"></i> 关闭</button>
+                <button class="sound-btn" data-sound="rain" onclick="selectSound('rain',this)"><i class="fas fa-cloud-rain"></i> 雨声</button>
+                <button class="sound-btn" data-sound="forest" onclick="selectSound('forest',this)"><i class="fas fa-tree"></i> 森林</button>
+                <button class="sound-btn" data-sound="wave" onclick="selectSound('wave',this)"><i class="fas fa-water"></i> 海浪</button>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 刘毅 · 番茄钟专注法 · <a href="../" style="color:var(--primary)">返回作品集</a></p></footer>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== 主题 =====
+        function toggleTheme() {
+            var h=document.documentElement,b=document.getElementById('themeBtn');
+            var l=h.getAttribute('data-theme')==='light';
+            h.setAttribute('data-theme',l?'dark':'light');
+            try{localStorage.setItem('theme',l?'dark':'light')}catch(e){}
+            b.innerHTML=l?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+        }
+        try{var st=localStorage.getItem('theme');if(st){document.documentElement.setAttribute('data-theme',st);
+            document.getElementById('themeBtn').innerHTML=st==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';}}catch(e){}
+
+        // ===== 计时器核心 =====
+        var MODES={pomodoro:25*60,short:5*60,long:15*60};
+        var MODE_NAMES={pomodoro:'🍅 专注时间',short:'☕ 休息一下',long:'🌿 长休放松'};
+        var mode='pomodoro',timeLeft=MODES[mode],totalTime=MODES[mode];
+        var isRunning=false,runningTimer=null;
+        var currentSound='none',audioCtx=null;
+        
+        // 统计数据
+        var stats=JSON.parse(localStorage.getItem('pomodoro_stats')||'{"today":0,"total":0,"minutes":0,"date":""}');
+        var today=new Date().toDateString();
+        if(stats.date!==today){stats.date=today;stats.today=0;saveStats();}
+
+        function saveStats(){try{localStorage.setItem('pomodoro_stats',JSON.stringify(stats))}catch(e){}}
+        function updateStatsUI(){
+            document.getElementById('todayCount').textContent=stats.today;
+            document.getElementById('totalCount').textContent=stats.total;
+            document.getElementById('focusMin').textContent=stats.minutes;
+        }
+        updateStatsUI();
+
+        // ===== SVG圆形周长 =====
+        var CIRCUMFERENCE=2*Math.PI*125;
+
+        function updateDisplay(){
+            var m=Math.floor(timeLeft/60),s=timeLeft%60;
+            document.getElementById('timerDisplay').textContent=
+                String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+            var progress=(totalTime-timeLeft)/totalTime;
+            var offset=CIRCUMFERENCE*(1-progress);
+            var circle=document.getElementById('timerCircle');
+            circle.setAttribute('stroke-dashoffset',offset);
+            document.getElementById('timerLabel').textContent=isRunning?'进行中...':MODE_NAMES[mode];
+        }
+
+        function switchMode(newMode){
+            if(isRunning){stopTimer();}
+            mode=newMode;
+            timeLeft=MODES[mode];
+            totalTime=MODES[mode];
+            isRunning=false;
+            
+            var tabs=document.querySelectorAll('.mode-tab');
+            tabs.forEach(function(t){t.classList.remove('active','active-break');});
+            var tab=document.querySelector('.mode-tab[data-mode="'+mode+'"]');
+            tab.classList.add(mode==='pomodoro'?'active':'active-break');
+            
+            var circle=document.getElementById('timerCircle');
+            circle.classList.toggle('break-mode',mode!=='pomodoro');
+            document.getElementById('mainBtn').innerHTML='<i class="fas fa-play"></i>';
+            updateDisplay();
+        }
+
+        function toggleTimer(){
+            if(isRunning){stopTimer();}else{startTimer();}
+        }
+
+        function startTimer(){
+            if(timeLeft<=0){
+                timeLeft=totalTime;
+                updateDisplay();
+            }
+            isRunning=true;
+            document.getElementById('mainBtn').innerHTML='<i class="fas fa-pause"></i>';
+            runningTimer=setInterval(function(){
+                timeLeft--;
+                updateDisplay();
+                // 震动效果
+                if(timeLeft<=10){document.getElementById('timerDisplay').style.color='var(--primary)';
+                }else{document.getElementById('timerDisplay').style.color='';}
+                if(timeLeft<=0){
+                    stopTimer();
+                    playComplete();
+                    sessionComplete();
+                }
+            },1000);
+        }
+
+        function stopTimer(){
+            isRunning=false;
+            clearInterval(runningTimer);
+            runningTimer=null;
+            document.getElementById('mainBtn').innerHTML='<i class="fas fa-play"></i>';
+        }
+
+        function resetTimer(){
+            stopTimer();
+            timeLeft=totalTime;
+            document.getElementById('timerDisplay').style.color='';
+            updateDisplay();
+            showToast('计时器已重置');
+        }
+
+        function skipSession(){
+            stopTimer();
+            timeLeft=0;
+            updateDisplay();
+            playComplete();
+            sessionComplete();
+        }
+
+        function sessionComplete(){
+            if(mode==='pomodoro'){
+                stats.today++;stats.total++;stats.minutes+=25;
+                saveStats();updateStatsUI();
+                showToast('🍅 太棒了！完成一个番茄钟！');
+                // 播放通知
+                if(Notification.permission==='granted'){
+                    new Notification('🍅 番茄钟完成！',{body:'休息一下吧！'});
+                }
+            }
+            // 自动切换到下一个模式
+            if(mode==='pomodoro'){
+                // 检查今天完成次数决定短休还是长休
+                if(stats.today%4===0){switchMode('long');}else{switchMode('short');}
+            }else{
+                switchMode('pomodoro');
+            }
+        }
+
+        function playComplete(){
+            try{
+                var ctx=new(window.AudioContext||window.webkitAudioContext)();
+                var osc=ctx.createOscillator();
+                var gain=ctx.createGain();
+                osc.connect(gain);gain.connect(ctx.destination);
+                osc.frequency.value=880;
+                gain.gain.setValueAtTime(0.3,ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.5);
+                osc.start();osc.stop(ctx.currentTime+0.5);
+                setTimeout(function(){
+                    var osc2=ctx.createOscillator();
+                    var gain2=ctx.createGain();
+                    osc2.connect(gain2);gain2.connect(ctx.destination);
+                    osc2.frequency.value=1100;
+                    gain2.gain.setValueAtTime(0.3,ctx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.5);
+                    osc2.start();osc2.stop(ctx.currentTime+0.5);
+                },200);
+            }catch(e){}
+        }
+
+        // 请求通知权限
+        try{if(Notification.permission==='default'){Notification.requestPermission();}}catch(e){}
+
+        // ===== 白噪音 =====
+        function selectSound(sound,btn){
+            currentSound=sound;
+            document.querySelectorAll('.sound-btn').forEach(function(b){b.classList.remove('active');});
+            if(sound!=='none'){btn.classList.add('active');}
+            // 用 Web Audio API 模拟白噪音
+            if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;}
+            if(sound==='none')return;
+            // 简化的白噪音效果 - 使用振荡器产生柔和噪音
+            try{
+                audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+                var bufferSize=audioCtx.sampleRate*2;
+                var buffer=audioCtx.createBuffer(1,bufferSize,audioCtx.sampleRate);
+                var data=buffer.getChannelData(0);
+                for(var i=0;i<bufferSize;i++){
+                    // 不同"声音"用不同频率
+                    if(sound==='rain'){data[i]=(Math.random()*2-1)*0.15;}
+                    else if(sound==='forest'){
+                        data[i]=(Math.random()*2-1)*0.1*(0.5+0.5*Math.sin(i*0.005));
+                    }else if(sound==='wave'){
+                        data[i]=(Math.random()*2-1)*0.08*(0.3+0.7*Math.sin(i*0.001));
+                    }
+                }
+                var source=audioCtx.createBufferSource();
+                source.buffer=buffer;
+                source.loop=true;
+                var gain=audioCtx.createGain();
+                gain.gain.value=0.3;
+                source.connect(gain);gain.connect(audioCtx.destination);
+                source.start();
+            }catch(e){}
+        }
+
+        // ===== 任务管理 =====
+        var tasks=JSON.parse(localStorage.getItem('pomodoro_tasks')||'[]');
+        function saveTasks(){try{localStorage.setItem('pomodoro_tasks',JSON.stringify(tasks))}catch(e){}}
+        
+        function renderTasks(){
+            var list=document.getElementById('taskList');
+            if(tasks.length===0){
+                list.innerHTML='<div class="empty-note">还没有任务，添加一个待办事项开始专注吧</div>';
+            }else{
+                var html='';var active=list.getAttribute('data-filter')!=='done';
+                var filtered=tasks;
+                for(var i=0;i<filtered.length;i++){
+                    var t=filtered[i];
+                    html+='<li class="task-item'+(t.done?' done':'')+'">'+
+                        '<div class="task-check'+(t.done?' checked':'')+'" onclick="toggleTask('+i+')">'+
+                        (t.done?'<i class="fas fa-check"></i>':'')+'</div>'+
+                        '<span class="task-text">'+escHtml(t.text)+'</span>'+
+                        '<button class="task-del" onclick="deleteTask('+i+')"><i class="fas fa-times"></i></button></li>';
+                }
+                list.innerHTML=html;
+            }
+        }
+        
+        function escHtml(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+        
+        function showAddTask(){
+            var w=document.getElementById('taskInputWrap');
+            w.style.display=w.style.display==='none'?'flex':'none';
+            if(w.style.display==='flex'){document.getElementById('taskInput').focus();}
+        }
+        
+        function addTask(){
+            var input=document.getElementById('taskInput');
+            var text=input.value.trim();
+            if(!text){showToast('请输入任务名称');return;}
+            tasks.push({text:text,done:false});
+            saveTasks();renderTasks();
+            input.value='';input.focus();
+            showToast('任务已添加');
+        }
+        
+        function toggleTask(i){
+            tasks[i].done=!tasks[i].done;
+            saveTasks();renderTasks();
+        }
+        
+        function deleteTask(i){
+            tasks.splice(i,1);
+            saveTasks();renderTasks();
+            showToast('任务已删除');
+        }
+        
+        renderTasks();
+
+        // ===== Toast =====
+        function showToast(msg){
+            var t=document.getElementById('toast');
+            t.textContent=msg;t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer=setTimeout(function(){t.classList.remove('show');},2200);
+        }
+
+        // ===== 初始化 =====
+        updateDisplay();
+    </script>
+</body>
+</html>

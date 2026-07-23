@@ -197,11 +197,12 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        let todos = [];
+        try { todos = JSON.parse(localStorage.getItem('todos') || '[]'); } catch(e) { todos = []; }
         let currentFilter = 'all';
         let editingIndex = -1;
 
-        function save() { localStorage.setItem('todos', JSON.stringify(todos)); }
+        function save() { try { localStorage.setItem('todos', JSON.stringify(todos)); } catch(e) {} }
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -346,18 +347,20 @@
             const btn = document.getElementById('themeBtn');
             const isLight = html.getAttribute('data-theme') === 'light';
             html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-            localStorage.setItem('theme', isLight ? 'dark' : 'light');
+            try { localStorage.setItem('theme', isLight ? 'dark' : 'light'); } catch(e) {}
             btn.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         }
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeBtn').innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        }
+        try {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                document.getElementById('themeBtn').innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            }
+        } catch(e) {}
         render();
     </script>
     <footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.8rem;border-top:1px solid var(--border);margin-top:20px">
-        <p>&copy; 2026 刘毅 · 微信: L-fov-Y-0629 · <a href="mailto:3622117675@qq.com" style="color:var(--primary)">邮箱</a> · <a href="../" style="color:var(--primary)">返回作品集</a></p>
+        <p>&copy; 2026 刘毅 · 微信: L-fov-Y-0629 · 邮箱: 3622117675@qq.com · <a href="../" style="color:var(--primary)">返回作品集</a></p>
     </footer>
 </body>
 </html>

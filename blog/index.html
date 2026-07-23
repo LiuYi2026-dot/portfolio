@@ -245,15 +245,15 @@
             <p>我是刘毅，一名大专毕业生。2026年开始用 AI 工具辅助编程，从零基础到能独立开发 Web 应用。我相信在这个时代，动手能力比文凭更重要。</p>
             <p>这里记录我的学习笔记、项目复盘和接单经验。希望能给同样在这条路上的朋友一些参考。</p>
             <div class="about-links">
-                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
+                <a href="#" onclick="copyEmail();return false;"><i class="fas fa-envelope"></i> 复制邮箱</a>
                 <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#"><i class="fab fa-weixin"></i> 微信: L-fov-Y-0629</a>
+                <a href="#" onclick="copyWechat();return false;"><i class="fab fa-weixin"></i> 复制微信号</a>
                 <a href="../"><i class="fas fa-briefcase"></i> 作品集</a>
             </div>
         </div>
     </section>
 
-    <footer><p>&copy; <span id="year">2026</span> 刘毅 · 微信: L-fov-Y-0629 · <a href="mailto:3622117675@qq.com" style="color:var(--primary)">邮箱</a> · <a href="../" style="color:var(--primary)">作品集</a></p></footer>
+    <footer><p>&copy; <span id="year">2026</span> 刘毅 · 接单微信: L-fov-Y-0629 · <a href="#" onclick="copyEmail();return false;" style="color:var(--primary)">复制邮箱</a> · <a href="../" style="color:var(--primary)">作品集</a></p></footer>
 
     <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="文章详情">
         <div class="modal-content">
@@ -382,6 +382,23 @@
                 document.getElementById('menuBtn').setAttribute('aria-expanded', 'false');
             }
             window.closeMenu = closeMenu;
+
+            // ===== 复制功能 =====
+            function copyWechat() { copyText('L-fov-Y-0629', '微信号已复制'); }
+            function copyEmail() { copyText('3622117675@qq.com', '邮箱已复制'); }
+            function copyText(text, msg) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(function() { alert(msg + ': ' + text); });
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select();
+                    document.execCommand('copy'); document.body.removeChild(ta);
+                    alert(msg + ': ' + text);
+                }
+            }
+            window.copyWechat = copyWechat;
+            window.copyEmail = copyEmail;
         })();
     </script>
 </body>

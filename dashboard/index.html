@@ -304,14 +304,16 @@
             const isLight = html.getAttribute('data-theme') === 'light';
             html.setAttribute('data-theme', isLight ? 'dark' : 'light');
             icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', isLight ? 'dark' : 'light');
+            try { localStorage.setItem('theme', isLight ? 'dark' : 'light'); } catch(e) {}
             charts.forEach(fn => fn());
         }
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
+        try {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        } catch(e) {}
 
         // ========== ECharts ==========
         function getThemeColors() {
@@ -448,7 +450,7 @@
         setTimeout(initAllCharts, 100);
     </script>
     <footer style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.82rem;border-top:1px solid var(--border);margin-top:20px">
-        <p>&copy; 2026 刘毅 · 微信: L-fov-Y-0629 · <a href="mailto:3622117675@qq.com" style="color:var(--primary)">邮箱</a> · <a href="../" style="color:var(--primary)">返回作品集</a></p>
+        <p>&copy; 2026 刘毅 · 微信: L-fov-Y-0629 · 邮箱: 3622117675@qq.com · <a href="../" style="color:var(--primary)">返回作品集</a></p>
     </footer>
 </body>
 </html>

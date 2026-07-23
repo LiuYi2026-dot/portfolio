@@ -414,7 +414,7 @@
 
     <nav>
         <div class="nav-inner">
-            <a href="#" class="nav-logo"><i class="fas fa-code"></i> 刘毅</a>
+            <a href="./" class="nav-logo"><i class="fas fa-code"></i> 刘毅</a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#projects" onclick="closeMenu()">项目</a></li>
                 <li><a href="#services" onclick="closeMenu()">服务 <span class="nav-badge">接单中</span></a></li>
@@ -660,7 +660,7 @@
             <p class="contact-desc">直接加微信聊需求，不收咨询费。<br><small>一般 24 小时内回复，急单注明"加急"。</small></p>
             <div class="contact-links">
                 <a href="#" onclick="copyWechat();return false;"><i class="fab fa-weixin"></i> 复制微信号</a>
-                <a href="mailto:3622117675@qq.com"><i class="fas fa-envelope"></i> 邮箱</a>
+                <a href="#" onclick="copyEmail();return false;"><i class="fas fa-envelope"></i> 复制邮箱</a>
                 <a href="https://github.com/LiuYi2026-dot" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
                 <a href="#" onclick="showQuote();return false;" class="contact-cta"><i class="fas fa-shopping-bag"></i> 立即询价</a>
             </div>
@@ -689,15 +689,22 @@
 
         // ===== 微信复制 =====
         function copyWechat() {
-            var text = 'L-fov-Y-0629';
+            copyText('L-fov-Y-0629', '微信号已复制');
+        }
+        // ===== 邮箱复制（解决mailto在某些电脑无效的问题） =====
+        function copyEmail() {
+            copyText('3622117675@qq.com', '邮箱已复制');
+        }
+        // ===== 通用复制 =====
+        function copyText(text, msg) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(function() { showToast('微信号已复制: ' + text); });
+                navigator.clipboard.writeText(text).then(function() { showToast(msg + ': ' + text); });
             } else {
                 var ta = document.createElement('textarea');
                 ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
                 document.body.appendChild(ta); ta.select();
                 document.execCommand('copy'); document.body.removeChild(ta);
-                showToast('微信号已复制: ' + text);
+                showToast(msg + ': ' + text);
             }
         }
         function showToast(msg) {
